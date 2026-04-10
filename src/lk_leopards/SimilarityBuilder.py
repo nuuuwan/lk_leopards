@@ -65,7 +65,9 @@ class SimilarityBuilder:
             f"({mat.shape[1]}-dim each)."
         )
 
-        console.print("[dim]Computing pairwise cosine similarity matrix...[/dim]")
+        console.print(
+            "[dim]Computing pairwise cosine similarity matrix...[/dim]"
+        )
         # Embeddings are already L2-normalised → dot product == cosine similarity
         sim: np.ndarray = mat @ mat.T  # (N × N)
         console.print(f"[green]✓[/green] Similarity matrix: {n}×{n}")
