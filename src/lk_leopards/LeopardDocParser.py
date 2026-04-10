@@ -18,6 +18,7 @@ class LeopardDocParser:
     RE_DATE_TOKEN = re.compile(r"(?:\*\*|\d{2})/\d{2}/\d{4}|\d{4}")
     RE_DATE_FULL = re.compile(r"^(\*\*|\d{2})/(\d{2})/(\d{4})$")
     RE_SEQ_NUM = re.compile(r"^\d{1,2}$")
+    RE_RAW_ID = re.compile(r"(KL[FM])(\d+)")
     TABLE_HEADER_LINES = {
         "#",
         "ID",
@@ -45,12 +46,16 @@ class LeopardDocParser:
                 leopards.append(leopard)
         return leopards
 
+    def _pad_id(self, raw_id: str) -> str:
+        """Pad the numeric part of a leopard ID to 4 digits: KLF1 → KLF0001."""
+        return self.RE_RAW_ID.sub(
+            lambda m: m.group(1) + m.group(2).zfill(4), raw_id
+        )
+
     def _parse_date_table(self, doc) -> dict[str, tuple[str, str]]:
         """Parse pages 13–15 and return {leopard_id: (first_seen, last_seen)}."""
         lines = []
-        for page_num in range(
-            self.FIRST_TABLE_PAGE - 1, self.LAST_TABLE_PAGE
-        ):
+        for page_num in range(self.FIRST_TABLE_PAGE - 1, self.LAST_TABLE_PAGE):
             for line in doc[page_num].get_text().split("\n"):
                 line = line.strip()
                 if (
@@ -69,20 +74,18 @@ class LeopardDocParser:
                 j = i + 1
                 while j < len(lines) and not self.RE_SEQ_NUM.match(lines[j]):
                     j += 1
-                record_lines = lines[i + 1: j]
+                record_lines = lines[i + 1 : j]
 
                 # Extract leopard ID
                 leopard_id = None
                 for rl in record_lines:
                     m = re.search(r"(KL[FM]\d+)", rl)
                     if m:
-                        leopard_id = m.group(1)
+                        leopard_id = self._pad_id(m.group(1))
                         break
 
                 if leopard_id:
-                    tokens = self.RE_DATE_TOKEN.findall(
-                        " ".join(record_lines)
-                    )
+                    tokens = self.RE_DATE_TOKEN.findall(" ".join(record_lines))
                     dates[leopard_id] = (
                         (
                             self._format_date(tokens[0])
@@ -118,7 +121,7 @@ class LeopardDocParser:
         for line in lines:
             m = self.RE_TITLE.match(line)
             if m:
-                leopard_id = m.group(1)
+                leopard_id = self._pad_id(m.group(1))
                 name_raw = m.group(2).strip()
                 name = re.split(r"\s*\(", name_raw)[0].strip()
                 break
@@ -135,7 +138,7 @@ class LeopardDocParser:
         if corr_idx is None:
             return None
 
-        table_lines = [line for line in lines[corr_idx + 1:] if line]
+        table_lines = [line for line in lines[corr_idx + 1 :] if line]
 
         # --- Find "Zone – X" line ---
         zone_idx = next(
@@ -171,7 +174,7 @@ class LeopardDocParser:
 
         # --- Correlation: lines after Zone until "Get more details" ---
         corr_lines = []
-        for line in table_lines[zone_idx + 1:]:
+        for line in table_lines[zone_idx + 1 :]:
             if line.startswith("Get more details"):
                 break
             corr_lines.append(line)
@@ -182,7 +185,7 @@ class LeopardDocParser:
         for line in corr_lines:
             m = re.search(r"Cub of\s+(KL[FM]\d+)", line)
             if m:
-                mother_id = m.group(1)
+                mother_id = self._pad_id(m.group(1))
                 break
 
         # --- Extract and save images ---

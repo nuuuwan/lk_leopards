@@ -1,0 +1,17 @@
+{
+    "id": "KLM0008",
+    "name": "Rala",
+    "gender": "M",
+    "location_details": "Kuluwana, Orukema road, Kirigal Ebe Road, Kiripokuna road 2nd bund, Yoda Lipa, Girikula, Palihademuwala",
+    "correlation_details": "Observed mating with KLF0006",
+    "image_path_list": [
+        "images/KLM0008/image_1.jpeg",
+        "images/KLM0008/image_2.jpeg"
+    ],
+    "zone_list": [
+        "A"
+    ],
+    "date_first_seen": "2020-10-15",
+    "date_last_seen": "2024-10-18",
+    "mother_id": ""
+}

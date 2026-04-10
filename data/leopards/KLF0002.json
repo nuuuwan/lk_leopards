@@ -1,0 +1,18 @@
+{
+    "id": "KLF0002",
+    "name": "Villu",
+    "gender": "F",
+    "location_details": "Kumana Villuwa, Boralu wala, Kumana Wewa Road (between Wewa 1st Junction to Villuwa), Yakala",
+    "correlation_details": "Mother of KLF0015 & KLF0016 (2017 litter)\nMother of KLF0004 & KLF0011 (2019 litter)\nMother of KLF0012 (2020 litter)\nMother of an untagged cub (2022)\nObserved mating with KLM0012",
+    "image_path_list": [
+        "images/KLF0002/image_1.jpeg",
+        "images/KLF0002/image_2.jpeg",
+        "images/KLF0002/image_3.jpeg"
+    ],
+    "zone_list": [
+        "B"
+    ],
+    "date_first_seen": "2019-03-25",
+    "date_last_seen": "2022-10-09",
+    "mother_id": ""
+}

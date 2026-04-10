@@ -1,0 +1,20 @@
+{
+    "id": "KLM0016",
+    "name": "Maha",
+    "gender": "M",
+    "location_details": "Itikala, Bagure, Kotalindawala, Andarakala, Nelumpathpokuna road from Bagure, Between Nelumpathpokuna and Godagedipokuna junction, Helawa",
+    "correlation_details": "Observed mating with KLF0007\nObserved mating with KLF0026",
+    "image_path_list": [
+        "images/KLM0016/image_1.jpeg",
+        "images/KLM0016/image_2.jpeg",
+        "images/KLM0016/image_3.jpeg",
+        "images/KLM0016/image_4.jpeg"
+    ],
+    "zone_list": [
+        "A",
+        "B"
+    ],
+    "date_first_seen": "2020-03-15",
+    "date_last_seen": "2025-03-23",
+    "mother_id": ""
+}

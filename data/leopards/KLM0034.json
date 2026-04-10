@@ -1,0 +1,20 @@
+{
+    "id": "KLM0034",
+    "name": "Jaya",
+    "gender": "M",
+    "location_details": "Itikala, Godagedipokuna, Beraliyawala, Bagura, Thummulla Beach Road, Kudavila",
+    "correlation_details": "Cub of KLF0011 (2023 litter)\nHad two more siblings but they went missing from\nearly days\nObserved fighting with KLM0037\nList of Leopards",
+    "image_path_list": [
+        "images/KLM0034/image_1.jpeg",
+        "images/KLM0034/image_2.jpeg",
+        "images/KLM0034/image_3.jpeg",
+        "images/KLM0034/image_4.jpeg"
+    ],
+    "zone_list": [
+        "A",
+        "B"
+    ],
+    "date_first_seen": "2022-10-17",
+    "date_last_seen": "2025-04-22",
+    "mother_id": "KLF0011"
+}

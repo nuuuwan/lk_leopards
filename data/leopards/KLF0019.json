@@ -1,0 +1,18 @@
+{
+    "id": "KLF0019",
+    "name": "Chara",
+    "gender": "F",
+    "location_details": "Girikula, Kiripokuna Road",
+    "correlation_details": "Observed mating with KLM0005",
+    "image_path_list": [
+        "images/KLF0019/image_1.jpeg",
+        "images/KLF0019/image_2.jpeg",
+        "images/KLF0019/image_3.jpeg"
+    ],
+    "zone_list": [
+        "A"
+    ],
+    "date_first_seen": "2020-12-08",
+    "date_last_seen": "2021-02-01",
+    "mother_id": ""
+}

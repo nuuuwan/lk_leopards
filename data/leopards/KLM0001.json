@@ -1,0 +1,17 @@
+{
+    "id": "KLM0001",
+    "name": "Hari",
+    "gender": "M",
+    "location_details": "Itikala, Godagedi Pokuna, Kumana Wewa 2nd Junction, Villuwa",
+    "correlation_details": "",
+    "image_path_list": [
+        "images/KLM0001/image_1.jpeg",
+        "images/KLM0001/image_2.jpeg"
+    ],
+    "zone_list": [
+        "B"
+    ],
+    "date_first_seen": "2020-11-**",
+    "date_last_seen": "2022-05-19",
+    "mother_id": ""
+}

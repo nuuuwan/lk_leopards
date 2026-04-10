@@ -1,0 +1,17 @@
+{
+    "id": "KLF0026",
+    "name": "Shala",
+    "gender": "F",
+    "location_details": "Nelumpathpokuna, Beraliyawala, Kongallena",
+    "correlation_details": "Observed mating with KLM0016",
+    "image_path_list": [
+        "images/KLF0026/image_1.jpeg",
+        "images/KLF0026/image_2.jpeg"
+    ],
+    "zone_list": [
+        "B"
+    ],
+    "date_first_seen": "2022-03-20",
+    "date_last_seen": "2025-03-24",
+    "mother_id": ""
+}

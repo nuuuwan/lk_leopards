@@ -1,0 +1,18 @@
+{
+    "id": "KLF0006",
+    "name": "Scent",
+    "gender": "F",
+    "location_details": "",
+    "correlation_details": "Observed mating with KLM0002\nObserved mating with KLM0008\nObserved mating with KLM0013\nMother of KLF0040",
+    "image_path_list": [
+        "images/KLF0006/image_1.jpeg",
+        "images/KLF0006/image_2.jpeg",
+        "images/KLF0006/image_3.jpeg"
+    ],
+    "zone_list": [
+        "A"
+    ],
+    "date_first_seen": "2020-06-09",
+    "date_last_seen": "2025-05-06",
+    "mother_id": ""
+}

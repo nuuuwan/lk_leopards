@@ -1,0 +1,18 @@
+{
+    "id": "KLF0009",
+    "name": "Mitta",
+    "gender": "F",
+    "location_details": "Oru kema, Girikula, Okanda Wela, Park Entrance, Palihademuwala, Helawa",
+    "correlation_details": "Mother of KLM0003 & KLM0004",
+    "image_path_list": [
+        "images/KLF0009/image_1.jpeg",
+        "images/KLF0009/image_2.jpeg",
+        "images/KLF0009/image_3.jpeg"
+    ],
+    "zone_list": [
+        "A"
+    ],
+    "date_first_seen": "2021-01-19",
+    "date_last_seen": "2022-06-19",
+    "mother_id": ""
+}

@@ -1,0 +1,19 @@
+{
+    "id": "KLM0004",
+    "name": "Sella",
+    "gender": "M",
+    "location_details": "Palihadamu wala, Okanda wela, Park Entrance, Oru Kema Road, Girikula",
+    "correlation_details": "KLM0003 (Same litter)\nCub of KLF0009",
+    "image_path_list": [
+        "images/KLM0004/image_1.jpeg",
+        "images/KLM0004/image_2.jpeg",
+        "images/KLM0004/image_3.jpeg",
+        "images/KLM0004/image_4.jpeg"
+    ],
+    "zone_list": [
+        "A"
+    ],
+    "date_first_seen": "2020-07-23",
+    "date_last_seen": "2021-06-24",
+    "mother_id": "KLF0009"
+}

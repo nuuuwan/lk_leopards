@@ -1,0 +1,17 @@
+{
+    "id": "KLF0028",
+    "name": "Abhi",
+    "gender": "F",
+    "location_details": "Anadarakala, Godagedipokuna, Itikala",
+    "correlation_details": "Seen together with KLM0022",
+    "image_path_list": [
+        "images/KLF0028/image_1.jpeg",
+        "images/KLF0028/image_2.jpeg"
+    ],
+    "zone_list": [
+        "B"
+    ],
+    "date_first_seen": "2022-04-19",
+    "date_last_seen": "2023-01-14",
+    "mother_id": ""
+}

@@ -1,0 +1,19 @@
+{
+    "id": "KLF0044",
+    "name": "Rajani",
+    "gender": "F",
+    "location_details": "Helawa, Kudumbigala",
+    "correlation_details": "",
+    "image_path_list": [
+        "images/KLF0044/image_1.jpeg",
+        "images/KLF0044/image_2.jpeg",
+        "images/KLF0044/image_3.jpeg",
+        "images/KLF0044/image_4.jpeg"
+    ],
+    "zone_list": [
+        "C"
+    ],
+    "date_first_seen": "2025-05-20",
+    "date_last_seen": "2025-07-26",
+    "mother_id": ""
+}

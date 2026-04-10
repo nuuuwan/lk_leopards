@@ -1,0 +1,18 @@
+{
+    "id": "KLF0029",
+    "name": "Olu",
+    "gender": "F",
+    "location_details": "South of Nelumpathpokuna, Itikala, Beraliyawala, Godagedipokuna",
+    "correlation_details": "Mother of KLF0035\nObserved mating with KLM0022\nMother of KLM0038 and another cub from same\nlitter (missing) \u2013 2023-2024 litter",
+    "image_path_list": [
+        "images/KLF0029/image_1.jpeg",
+        "images/KLF0029/image_2.jpeg",
+        "images/KLF0029/image_3.jpeg"
+    ],
+    "zone_list": [
+        "B"
+    ],
+    "date_first_seen": "2022-04-05",
+    "date_last_seen": "2025-05-12",
+    "mother_id": ""
+}

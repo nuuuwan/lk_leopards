@@ -1,0 +1,21 @@
+{
+    "id": "KLM0038",
+    "name": "OB",
+    "gender": "M",
+    "location_details": "",
+    "correlation_details": "Cub of KLF0029 (2023 litter)\nList of Leopards",
+    "image_path_list": [
+        "images/KLM0038/image_1.jpeg",
+        "images/KLM0038/image_2.jpeg",
+        "images/KLM0038/image_3.jpeg",
+        "images/KLM0038/image_4.jpeg",
+        "images/KLM0038/image_5.jpeg"
+    ],
+    "zone_list": [
+        "A",
+        "B"
+    ],
+    "date_first_seen": "2024-03-08",
+    "date_last_seen": "2025-04-24",
+    "mother_id": "KLF0029"
+}

@@ -1,0 +1,19 @@
+{
+    "id": "KLF0031",
+    "name": "Anuvi",
+    "gender": "F",
+    "location_details": "Bagure, Palukotawala, Okanda Wela, Kirigal Ebe",
+    "correlation_details": "Cub of KLF0008 (2021-2022)\nSame litter as KLF0033\nObserved mating with KLM0013",
+    "image_path_list": [
+        "images/KLF0031/image_1.jpeg",
+        "images/KLF0031/image_2.jpeg",
+        "images/KLF0031/image_3.jpeg",
+        "images/KLF0031/image_4.jpeg"
+    ],
+    "zone_list": [
+        "A"
+    ],
+    "date_first_seen": "2022-02-01",
+    "date_last_seen": "2025-02-16",
+    "mother_id": "KLF0008"
+}

@@ -1,0 +1,17 @@
+{
+    "id": "KLF0030",
+    "name": "Sethu",
+    "gender": "F",
+    "location_details": "Kumana Wewa 3rd Junction",
+    "correlation_details": "Observed together with KLF0010",
+    "image_path_list": [
+        "images/KLF0030/image_1.jpeg",
+        "images/KLF0030/image_2.jpeg"
+    ],
+    "zone_list": [
+        "B"
+    ],
+    "date_first_seen": "2022-09-23",
+    "date_last_seen": "2022-09-23",
+    "mother_id": ""
+}

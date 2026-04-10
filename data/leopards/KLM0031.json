@@ -1,0 +1,18 @@
+{
+    "id": "KLM0031",
+    "name": "Ritta",
+    "gender": "M",
+    "location_details": "Kumana Wewa 1st junction, Kumana Wewa 2nd junction, Kumana Wewa 3rd junction, Eraminiyangas wewa, Boaththagala, Kumana Villu, Kumana Village, Yakala",
+    "correlation_details": "Cub of KLF0010 (2022-2023)\nSeen together with KLM0027\nSeen together with KLM0012\nSeen together with KLM0033\nSeen together with KLM0035\nObserved together with KLF0023\nObserved mating with KLF0015\nObserved mating with KLF0012\nList of Leopards",
+    "image_path_list": [
+        "images/KLM0031/image_1.jpeg",
+        "images/KLM0031/image_2.jpeg",
+        "images/KLM0031/image_3.jpeg"
+    ],
+    "zone_list": [
+        "B"
+    ],
+    "date_first_seen": "2022-06-13",
+    "date_last_seen": "2025-04-28",
+    "mother_id": "KLF0010"
+}

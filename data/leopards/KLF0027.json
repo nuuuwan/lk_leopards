@@ -1,0 +1,19 @@
+{
+    "id": "KLF0027",
+    "name": "Dhara",
+    "gender": "F",
+    "location_details": "Gal Amuna, River Road, Kumana Wewa 1st Junction, Kumana Wewa 2nd Junction, Villu",
+    "correlation_details": "",
+    "image_path_list": [
+        "images/KLF0027/image_1.jpeg",
+        "images/KLF0027/image_2.jpeg",
+        "images/KLF0027/image_3.jpeg",
+        "images/KLF0027/image_4.jpeg"
+    ],
+    "zone_list": [
+        "B"
+    ],
+    "date_first_seen": "2022-02-15",
+    "date_last_seen": "2024-12-23",
+    "mother_id": ""
+}

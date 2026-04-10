@@ -1,0 +1,18 @@
+{
+    "id": "KLF0012",
+    "name": "Sobi",
+    "gender": "F",
+    "location_details": "Kumana villuwa, Yakala, Kumana Wewa Road 1st junction, Yalupokuna Road, Thummulla",
+    "correlation_details": "Cub of KLF0002\nSeen together with KLM0012\nMother of an untagged cub (2024 litter)\nObserved together with KLM0021\nObserved together with KLF0015",
+    "image_path_list": [
+        "images/KLF0012/image_1.jpeg",
+        "images/KLF0012/image_2.jpeg",
+        "images/KLF0012/image_3.jpeg"
+    ],
+    "zone_list": [
+        "B"
+    ],
+    "date_first_seen": "2020-08-23",
+    "date_last_seen": "2024-10-27",
+    "mother_id": "KLF0002"
+}

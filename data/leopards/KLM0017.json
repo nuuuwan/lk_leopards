@@ -1,0 +1,21 @@
+{
+    "id": "KLM0017",
+    "name": "Rohaka",
+    "gender": "M",
+    "location_details": "Eraminiyangas Wewa, Aluthgama Wewa, Gal Amuna, Yala Block ii, Kumana Villu, Eda Kumbuka 2",
+    "correlation_details": "",
+    "image_path_list": [
+        "images/KLM0017/image_1.jpeg",
+        "images/KLM0017/image_2.jpeg",
+        "images/KLM0017/image_3.jpeg",
+        "images/KLM0017/image_4.jpeg",
+        "images/KLM0017/image_5.jpeg",
+        "images/KLM0017/image_6.jpeg"
+    ],
+    "zone_list": [
+        "B"
+    ],
+    "date_first_seen": "2021-08-**",
+    "date_last_seen": "2024-07-04",
+    "mother_id": ""
+}

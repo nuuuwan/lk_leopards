@@ -1,0 +1,16 @@
+{
+    "id": "KLM0023",
+    "name": "Seenu",
+    "gender": "M",
+    "location_details": "Between Kudumbigala and park entrance",
+    "correlation_details": "List of Leopards",
+    "image_path_list": [
+        "images/KLM0023/image_1.jpeg"
+    ],
+    "zone_list": [
+        "C"
+    ],
+    "date_first_seen": "2022-03-12",
+    "date_last_seen": "2022-03-12",
+    "mother_id": ""
+}
