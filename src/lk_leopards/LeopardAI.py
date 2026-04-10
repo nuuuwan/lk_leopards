@@ -5,7 +5,7 @@ from deepface import DeepFace
 
 from lk_leopards.Leopard import Leopard
 
-FINGERPRINTS_PATH = os.path.join("data", "finger_prints.json")
+FINGERPRINTS_DIR = os.path.join("data", "finger_prints")
 
 
 class LeopardAI:
@@ -35,21 +35,36 @@ class LeopardAI:
                 print(f"[LeopardAI] Skipping {image_path}: {e}")
         return fingerprints
 
-    def build_fingerprints(self):
-        """Compute face fingerprints for every leopard and write to data/finger_prints.json.
+    def _fingerprint_path(self, leopard_id: str, image_path: str) -> str:
+        image_stem = os.path.splitext(os.path.basename(image_path))[0]
+        return os.path.join(
+            FINGERPRINTS_DIR, leopard_id, f"{image_stem}.json"
+        )
 
-        Output format:
-        {
-            "KLF1": [[...embedding...], ...],
-            "KLM2": [...],
-            ...
-        }
+    def build_fingerprints(self):
+        """Compute face fingerprints per image and write to
+        data/finger_prints/<leopard_id>/<image_stem>.json.
+
+        Each file contains a list of 512-dim embedding vectors (one per
+        detected face in that image).
         """
         leopards = sorted(Leopard.list_all(), key=lambda l: l.id)
-        data: dict[str, list[list[float]]] = {}
         for leopard in leopards:
             print(f"[LeopardAI] Processing {leopard.id} ({leopard.name})...")
-            data[leopard.id] = self.get_face_fingerprints(leopard)
-        with open(FINGERPRINTS_PATH, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4)
-        print(f"[LeopardAI] Wrote {FINGERPRINTS_PATH}")
+            for image_path in leopard.image_path_list:
+                out_path = self._fingerprint_path(leopard.id, image_path)
+                os.makedirs(os.path.dirname(out_path), exist_ok=True)
+                embeddings: list[list[float]] = []
+                try:
+                    results = DeepFace.represent(
+                        img_path=image_path,
+                        model_name=self.MODEL_NAME,
+                        detector_backend=self.DETECTOR_BACKEND,
+                        enforce_detection=False,
+                    )
+                    embeddings = [r["embedding"] for r in results]
+                except Exception as e:
+                    print(f"[LeopardAI] Skipping {image_path}: {e}")
+                with open(out_path, "w", encoding="utf-8") as f:
+                    json.dump(embeddings, f, indent=4)
+                print(f"[LeopardAI] Wrote {out_path}")
