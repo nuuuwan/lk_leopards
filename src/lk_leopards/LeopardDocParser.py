@@ -10,9 +10,22 @@ class LeopardDocParser:
     PDF_PATH = os.path.join("docs", "Leopards of Kumana - Field Guide.pdf")
     FIRST_PAGE = 16  # 1-indexed, inclusive
     LAST_PAGE = 103  # 1-indexed, inclusive
+    FIRST_TABLE_PAGE = 13  # 1-indexed, pages with first/last seen table
+    LAST_TABLE_PAGE = 15
 
     RE_TITLE = re.compile(r"^\d+\.\s+(KL[FM]\d+)\s*[–\-]\s*(.*)")
     RE_ZONE = re.compile(r"^Zone\s*[–\-]\s*(.*)")
+    RE_DATE_TOKEN = re.compile(r"(?:\*\*|\d{2})/\d{2}/\d{4}|\d{4}")
+    RE_DATE_FULL = re.compile(r"^(\*\*|\d{2})/(\d{2})/(\d{4})$")
+    RE_SEQ_NUM = re.compile(r"^\d{1,2}$")
+    TABLE_HEADER_LINES = {
+        "#",
+        "ID",
+        "Zone",
+        "First Seen",
+        "Last Seen",
+        "Mother",
+    }
 
     def __init__(self, pdf_path: str = None):
         self.pdf_path = pdf_path or self.PDF_PATH
@@ -20,13 +33,77 @@ class LeopardDocParser:
     def parse(self) -> list[Leopard]:
         os.makedirs(os.path.join("data", "leopards"), exist_ok=True)
         doc = fitz.open(self.pdf_path)
+        dates = self._parse_date_table(doc)
         leopards = []
         for page_num in range(self.FIRST_PAGE - 1, self.LAST_PAGE):
             leopard = self._parse_page(doc[page_num], doc)
             if leopard is not None:
+                first_seen, last_seen = dates.get(leopard.id, ("", ""))
+                leopard.date_first_seen = first_seen
+                leopard.date_last_seen = last_seen
                 leopard.write()
                 leopards.append(leopard)
         return leopards
+
+    def _parse_date_table(self, doc) -> dict[str, tuple[str, str]]:
+        """Parse pages 13–15 and return {leopard_id: (first_seen, last_seen)}."""
+        lines = []
+        for page_num in range(self.FIRST_TABLE_PAGE - 1, self.LAST_TABLE_PAGE):
+            for line in doc[page_num].get_text().split("\n"):
+                line = line.strip()
+                if (
+                    line
+                    and line not in self.TABLE_HEADER_LINES
+                    and not line.startswith("Leopards of Kumana")
+                    and not line.startswith("P a g e")
+                ):
+                    lines.append(line)
+
+        dates: dict[str, tuple[str, str]] = {}
+        i = 0
+        while i < len(lines):
+            if self.RE_SEQ_NUM.match(lines[i]):
+                # Collect lines belonging to this record
+                j = i + 1
+                while j < len(lines) and not self.RE_SEQ_NUM.match(lines[j]):
+                    j += 1
+                record_lines = lines[i + 1 : j]
+
+                # Extract leopard ID
+                leopard_id = None
+                for rl in record_lines:
+                    m = re.search(r"(KL[FM]\d+)", rl)
+                    if m:
+                        leopard_id = m.group(1)
+                        break
+
+                if leopard_id:
+                    tokens = self.RE_DATE_TOKEN.findall(" ".join(record_lines))
+                    dates[leopard_id] = (
+                        (
+                            self._format_date(tokens[0])
+                            if len(tokens) > 0
+                            else ""
+                        ),
+                        (
+                            self._format_date(tokens[1])
+                            if len(tokens) > 1
+                            else ""
+                        ),
+                    )
+                i = j
+            else:
+                i += 1
+
+        return dates
+
+    def _format_date(self, token: str) -> str:
+        """Convert dd/mm/yyyy (or **/mm/yyyy) to yyyy-mm-dd; year-only stays as-is."""
+        m = self.RE_DATE_FULL.match(token)
+        if m:
+            dd, mm, yyyy = m.group(1), m.group(2), m.group(3)
+            return f"{yyyy}-{mm}-{dd}"
+        return token  # year-only or unrecognised
 
     def _parse_page(self, page, doc) -> Leopard | None:
         lines = [line.strip() for line in page.get_text().split("\n")]
@@ -54,7 +131,7 @@ class LeopardDocParser:
         if corr_idx is None:
             return None
 
-        table_lines = [line for line in lines[corr_idx + 1:] if line]
+        table_lines = [line for line in lines[corr_idx + 1 :] if line]
 
         # --- Find "Zone – X" line ---
         zone_idx = next(
@@ -84,7 +161,7 @@ class LeopardDocParser:
 
         # --- Correlation: lines after Zone until "Get more details" ---
         corr_lines = []
-        for line in table_lines[zone_idx + 1:]:
+        for line in table_lines[zone_idx + 1 :]:
             if line.startswith("Get more details"):
                 break
             corr_lines.append(line)
