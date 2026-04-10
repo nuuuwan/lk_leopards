@@ -11,7 +11,7 @@ class Leopard:
     location_details: str
     correlation_details: str
     image_path_list: list[str]
-    zone: str
+    zone_list: list[str]
     date_first_seen: str
     date_last_seen: str
     mother_id: str

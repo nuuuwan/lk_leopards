@@ -145,7 +145,13 @@ class LeopardDocParser:
         if zone_idx is None:
             return None
 
-        zone = self.RE_ZONE.match(table_lines[zone_idx]).group(1).strip()
+        zone_list = [
+            z.strip()
+            for z in self.RE_ZONE.match(table_lines[zone_idx])
+            .group(1)
+            .split(",")
+            if z.strip()
+        ]
 
         # --- Location: lines between end-of-ID-cell and Zone ---
         # The ID cell ends after the Sinhala name (first line containing "(")
@@ -185,7 +191,7 @@ class LeopardDocParser:
             location_details=location_details,
             correlation_details=correlation_details,
             image_path_list=image_path_list,
-            zone=zone,
+            zone_list=zone_list,
             date_first_seen="",
             date_last_seen="",
             mother_id=mother_id,
