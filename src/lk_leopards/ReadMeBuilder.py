@@ -1,6 +1,10 @@
+import json
+import os
+
 from lk_leopards.Leopard import Leopard
 
 README_PATH = "README.md"
+SIMILARITY_PATH = os.path.join("data", "similarity.json")
 
 
 class ReadMeBuilder:
@@ -39,6 +43,47 @@ class ReadMeBuilder:
             f"| {leopard.date_last_seen} | {first_image} |"
         )
 
+    def _similarity_section(self) -> str:
+        """Build a summary of the top cross-leopard similar image pairs."""
+        if not os.path.exists(SIMILARITY_PATH):
+            return ""
+
+        with open(SIMILARITY_PATH, encoding="utf-8") as f:
+            similarity: dict = json.load(f)
+
+        # Collect unique cross-leopard pairs (different leopard IDs) with highest scores
+        seen: set[frozenset] = set()
+        pairs: list[tuple[float, str, str]] = []
+        for src_key, matches in similarity.items():
+            src_leopard = src_key.split("/")[0]
+            for match in matches:
+                tgt_key: str = match["image"]
+                tgt_leopard = tgt_key.split("/")[0]
+                if src_leopard == tgt_leopard:
+                    continue
+                pair = frozenset([src_key, tgt_key])
+                if pair in seen:
+                    continue
+                seen.add(pair)
+                pairs.append((match["score"], src_key, tgt_key))
+
+        pairs.sort(key=lambda x: -x[0])
+        top_pairs = pairs[:10]
+
+        lines = [
+            "## Top Similar Pairs (Cross-Leopard)",
+            "",
+            "The 10 image pairs with the highest cosine similarity score "
+            "that belong to *different* leopards.",
+            "",
+            "| Score | Image A | Image B |",
+            "| --- | --- | --- |",
+        ]
+        for score, a, b in top_pairs:
+            lines.append(f"| {score:.4f} | {a} | {b} |")
+
+        return "\n".join(lines)
+
     def _leopards_table_section(self) -> str:
         header = (
             "## Leopards\n"
@@ -50,6 +95,7 @@ class ReadMeBuilder:
         return "\n".join([header] + rows)
 
     def build(self) -> str:
+        similarity_section = self._similarity_section()
         sections = [
             "# lk_leopards",
             "",
@@ -57,6 +103,10 @@ class ReadMeBuilder:
             "",
             self._summary_section(),
             "",
+        ]
+        if similarity_section:
+            sections += [similarity_section, ""]
+        sections += [
             self._leopards_table_section(),
             "",
         ]

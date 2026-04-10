@@ -17,6 +17,7 @@ os.close(_devnull)
 from lk_leopards import (
     LeopardAI,
     ReadMeBuilder,
+    SimilarityBuilder,
 )  # noqa: E402 (imports TF/DeepFace)
 
 # Restore stderr so Rich console output works normally
@@ -25,4 +26,5 @@ os.close(_stderr_fd)
 
 if __name__ == "__main__":
     LeopardAI().build_fingerprints()
+    SimilarityBuilder().write()
     ReadMeBuilder().write()
