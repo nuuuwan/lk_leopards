@@ -11,7 +11,9 @@
         "images/KLM41/image_4.jpeg",
         "images/KLM41/image_5.jpeg"
     ],
-    "zone": "B",
+    "zone_list": [
+        "B"
+    ],
     "date_first_seen": "2024-07-31",
     "date_last_seen": "2025-04-26",
     "mother_id": "KLF21"

@@ -8,7 +8,9 @@
         "images/KLM24/image_1.jpeg",
         "images/KLM24/image_2.jpeg"
     ],
-    "zone": "B",
+    "zone_list": [
+        "B"
+    ],
     "date_first_seen": "2022-02-09",
     "date_last_seen": "2022-02-09",
     "mother_id": ""

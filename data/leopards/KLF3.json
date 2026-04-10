@@ -9,7 +9,9 @@
         "images/KLF3/image_2.jpeg",
         "images/KLF3/image_3.jpeg"
     ],
-    "zone": "B",
+    "zone_list": [
+        "B"
+    ],
     "date_first_seen": "2018-06-24",
     "date_last_seen": "2019-11-17",
     "mother_id": ""

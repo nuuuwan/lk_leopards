@@ -9,7 +9,9 @@
         "images/KLF32/image_2.jpeg",
         "images/KLF32/image_3.jpeg"
     ],
-    "zone": "C",
+    "zone_list": [
+        "C"
+    ],
     "date_first_seen": "2023-02-16",
     "date_last_seen": "2023-02-16",
     "mother_id": ""

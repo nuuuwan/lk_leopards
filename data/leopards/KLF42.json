@@ -10,7 +10,9 @@
         "images/KLF42/image_3.jpeg",
         "images/KLF42/image_4.jpeg"
     ],
-    "zone": "B",
+    "zone_list": [
+        "B"
+    ],
     "date_first_seen": "2024-25-03",
     "date_last_seen": "2025-04-22",
     "mother_id": "KLF17"

@@ -10,7 +10,10 @@
         "images/KLM9/image_3.jpeg",
         "images/KLM9/image_4.jpeg"
     ],
-    "zone": "A, B",
+    "zone_list": [
+        "A",
+        "B"
+    ],
     "date_first_seen": "2017-03-13",
     "date_last_seen": "2020-10-18",
     "mother_id": ""

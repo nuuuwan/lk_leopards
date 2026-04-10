@@ -7,7 +7,9 @@
     "image_path_list": [
         "images/KLM40/image_1.jpeg"
     ],
-    "zone": "B",
+    "zone_list": [
+        "B"
+    ],
     "date_first_seen": "2024-12-07",
     "date_last_seen": "2025-04-16",
     "mother_id": ""

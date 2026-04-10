@@ -8,7 +8,9 @@
         "images/KLF28/image_1.jpeg",
         "images/KLF28/image_2.jpeg"
     ],
-    "zone": "B",
+    "zone_list": [
+        "B"
+    ],
     "date_first_seen": "2022-04-19",
     "date_last_seen": "2023-01-14",
     "mother_id": ""

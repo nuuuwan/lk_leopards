@@ -10,7 +10,10 @@
         "images/KLM43/image_3.jpeg",
         "images/KLM43/image_4.jpeg"
     ],
-    "zone": "A, B",
+    "zone_list": [
+        "A",
+        "B"
+    ],
     "date_first_seen": "2024-07-28",
     "date_last_seen": "2024-07-28",
     "mother_id": "KLF7"

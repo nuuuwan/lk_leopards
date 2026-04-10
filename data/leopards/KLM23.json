@@ -7,7 +7,9 @@
     "image_path_list": [
         "images/KLM23/image_1.jpeg"
     ],
-    "zone": "C",
+    "zone_list": [
+        "C"
+    ],
     "date_first_seen": "2022-03-12",
     "date_last_seen": "2022-03-12",
     "mother_id": ""

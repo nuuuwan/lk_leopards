@@ -8,7 +8,9 @@
         "images/KLM8/image_1.jpeg",
         "images/KLM8/image_2.jpeg"
     ],
-    "zone": "A",
+    "zone_list": [
+        "A"
+    ],
     "date_first_seen": "2020-10-15",
     "date_last_seen": "2024-10-18",
     "mother_id": ""

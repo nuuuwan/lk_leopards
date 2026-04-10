@@ -10,7 +10,9 @@
         "images/KLM39/image_3.jpeg",
         "images/KLM39/image_4.jpeg"
     ],
-    "zone": "B",
+    "zone_list": [
+        "B"
+    ],
     "date_first_seen": "2024-03-07",
     "date_last_seen": "2025-03-26",
     "mother_id": "KLF10"

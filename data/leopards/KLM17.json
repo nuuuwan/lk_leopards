@@ -12,7 +12,9 @@
         "images/KLM17/image_5.jpeg",
         "images/KLM17/image_6.jpeg"
     ],
-    "zone": "B",
+    "zone_list": [
+        "B"
+    ],
     "date_first_seen": "2021-08-**",
     "date_last_seen": "2024-07-04",
     "mother_id": ""

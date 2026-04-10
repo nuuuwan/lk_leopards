@@ -10,7 +10,9 @@
         "images/KLF38/image_3.jpeg",
         "images/KLF38/image_4.jpeg"
     ],
-    "zone": "A",
+    "zone_list": [
+        "A"
+    ],
     "date_first_seen": "2024-03-08",
     "date_last_seen": "2024-06-18",
     "mother_id": ""

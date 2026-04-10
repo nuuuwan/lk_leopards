@@ -10,7 +10,10 @@
         "images/KLM22/image_3.jpeg",
         "images/KLM22/image_4.jpeg"
     ],
-    "zone": "A, B",
+    "zone_list": [
+        "A",
+        "B"
+    ],
     "date_first_seen": "2022-02-09",
     "date_last_seen": "2025-03-16",
     "mother_id": ""

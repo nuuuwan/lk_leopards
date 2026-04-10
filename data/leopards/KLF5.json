@@ -11,7 +11,9 @@
         "images/KLF5/image_4.jpeg",
         "images/KLF5/image_5.jpeg"
     ],
-    "zone": "A",
+    "zone_list": [
+        "A"
+    ],
     "date_first_seen": "2014-11-**",
     "date_last_seen": "2025-03-22",
     "mother_id": ""
