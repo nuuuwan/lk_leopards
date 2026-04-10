@@ -1,0 +1,17 @@
+{
+    "id": "KLF38",
+    "name": "Bhagi",
+    "gender": "F",
+    "location_details": "Bagure, Babaragasthalawa, Kiripokuna Road 1st Bund",
+    "correlation_details": "Observed together with KLM2\nObserved together with KLF40",
+    "image_path_list": [
+        "images/KLF38/image_1.jpeg",
+        "images/KLF38/image_2.jpeg",
+        "images/KLF38/image_3.jpeg",
+        "images/KLF38/image_4.jpeg"
+    ],
+    "zone": "A",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

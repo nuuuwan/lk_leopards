@@ -1,0 +1,17 @@
+{
+    "id": "KLF24",
+    "name": "Agra",
+    "gender": "F",
+    "location_details": "Eraminiyan Wewa, Gal Amuna, Weli Ara, Aluthgama Wewa road, Kumana Wewa 1st Junction",
+    "correlation_details": "Seen together with KLM25\nSeen together with KLM33\nMother of KLF41",
+    "image_path_list": [
+        "images/KLF24/image_1.jpeg",
+        "images/KLF24/image_2.jpeg",
+        "images/KLF24/image_3.jpeg",
+        "images/KLF24/image_4.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

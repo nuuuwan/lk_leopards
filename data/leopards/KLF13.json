@@ -1,0 +1,16 @@
+{
+    "id": "KLF13",
+    "name": "Anodi",
+    "gender": "F",
+    "location_details": "Kumana Wewa 3rd junction to Galamuna camp site, Nelumpathpokuna, Eraminiyan Wewa",
+    "correlation_details": "Seen mating with KLM12\nSeen mating with KLM33",
+    "image_path_list": [
+        "images/KLF13/image_1.jpeg",
+        "images/KLF13/image_2.jpeg",
+        "images/KLF13/image_3.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

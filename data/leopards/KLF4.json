@@ -1,0 +1,17 @@
+{
+    "id": "KLF4",
+    "name": "Neela",
+    "gender": "F",
+    "location_details": "Yakala, Kumana Wewa Road 1st junction, Villuwa",
+    "correlation_details": "KLF11 - Same litter\nCub of KLF2",
+    "image_path_list": [
+        "images/KLF4/image_1.jpeg",
+        "images/KLF4/image_2.jpeg",
+        "images/KLF4/image_3.jpeg",
+        "images/KLF4/image_4.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": "KLF2"
+}

@@ -1,0 +1,15 @@
+{
+    "id": "KLF8",
+    "name": "Black Nose",
+    "gender": "F",
+    "location_details": "Kirigal Ebe Road, Kiripokuna Road, Diwulpallama Road, Bagure, Palukotawala, Aliya Wala, Kudaram Gala, Girikula, Orukema road, Helawa",
+    "correlation_details": "Mother of KLF31 and KLF33 (2021-2022)\nObserved mating with KLM2\nObserved mating with KLM13",
+    "image_path_list": [
+        "images/KLF8/image_1.jpeg",
+        "images/KLF8/image_2.jpeg"
+    ],
+    "zone": "A",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

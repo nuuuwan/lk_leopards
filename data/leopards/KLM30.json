@@ -1,0 +1,17 @@
+{
+    "id": "KLM30",
+    "name": "Theja",
+    "gender": "M",
+    "location_details": "Helawa",
+    "correlation_details": "List of Leopards",
+    "image_path_list": [
+        "images/KLM30/image_1.jpeg",
+        "images/KLM30/image_2.jpeg",
+        "images/KLM30/image_3.jpeg",
+        "images/KLM30/image_4.jpeg"
+    ],
+    "zone": "C",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

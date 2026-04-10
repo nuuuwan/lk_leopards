@@ -1,0 +1,17 @@
+{
+    "id": "KLF36",
+    "name": "Soba",
+    "gender": "F",
+    "location_details": "Bagura, Diwulpallama Wewa, Kiripokuna, Kudaramgala",
+    "correlation_details": "Observed with a cub 2024\nObserved mating with KLM29\nObserved mating with KLM13",
+    "image_path_list": [
+        "images/KLF36/image_1.jpeg",
+        "images/KLF36/image_2.jpeg",
+        "images/KLF36/image_3.jpeg",
+        "images/KLF36/image_4.jpeg"
+    ],
+    "zone": "A",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

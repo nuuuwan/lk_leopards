@@ -1,0 +1,18 @@
+{
+    "id": "KLF39",
+    "name": "Nadi",
+    "gender": "F",
+    "location_details": "Eda Kumbuka 1, Kumana Village Junction",
+    "correlation_details": "",
+    "image_path_list": [
+        "images/KLF39/image_1.jpeg",
+        "images/KLF39/image_2.jpeg",
+        "images/KLF39/image_3.jpeg",
+        "images/KLF39/image_4.jpeg",
+        "images/KLF39/image_5.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

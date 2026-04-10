@@ -1,0 +1,16 @@
+{
+    "id": "KLF9",
+    "name": "Mitta",
+    "gender": "F",
+    "location_details": "Oru kema, Girikula, Okanda Wela, Park Entrance, Palihademuwala, Helawa",
+    "correlation_details": "Mother of KLM3 & KLM4",
+    "image_path_list": [
+        "images/KLF9/image_1.jpeg",
+        "images/KLF9/image_2.jpeg",
+        "images/KLF9/image_3.jpeg"
+    ],
+    "zone": "A",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

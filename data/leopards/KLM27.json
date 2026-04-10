@@ -1,0 +1,17 @@
+{
+    "id": "KLM27",
+    "name": "Chandra",
+    "gender": "M",
+    "location_details": "Kumana Wewa 2nd Junction, Eraminiyangas Wewa, Boaththagala Junction, Kumana Villu",
+    "correlation_details": "Seen together with KLF10, KLM31\nSeen together with KLF23\nObserved mating with KLF10\nList of Leopards",
+    "image_path_list": [
+        "images/KLM27/image_1.jpeg",
+        "images/KLM27/image_2.jpeg",
+        "images/KLM27/image_3.jpeg",
+        "images/KLM27/image_4.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

@@ -1,0 +1,17 @@
+{
+    "id": "KLM37",
+    "name": "Raava",
+    "gender": "M",
+    "location_details": "",
+    "correlation_details": "Observed fighting with KLM34\nList of Leopards",
+    "image_path_list": [
+        "images/KLM37/image_1.jpeg",
+        "images/KLM37/image_2.jpeg",
+        "images/KLM37/image_3.jpeg",
+        "images/KLM37/image_4.jpeg"
+    ],
+    "zone": "A, B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

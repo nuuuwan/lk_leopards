@@ -1,0 +1,17 @@
+{
+    "id": "KLF10",
+    "name": "Ridhi",
+    "gender": "F",
+    "location_details": "Kumana Wewa 3rd Junction, Kumana Wewa 2nd Junction, Kumana Wewa 2nd Junction, Boaththagala Junction, Eraminiyan Wewa Bund",
+    "correlation_details": "Seen together with KLF23\nSeen together with KLF30\nObserved mating with KM27\nMother of KLM31 and another cub from same\nlitter (missing) \u2013 2022-2023\nObserved mating with KLM33\nMother of KLM39 (2023-2024 litter)",
+    "image_path_list": [
+        "images/KLF10/image_1.jpeg",
+        "images/KLF10/image_2.jpeg",
+        "images/KLF10/image_3.jpeg",
+        "images/KLF10/image_4.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

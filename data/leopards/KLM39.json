@@ -1,0 +1,17 @@
+{
+    "id": "KLM39",
+    "name": "Rivi",
+    "gender": "M",
+    "location_details": "Kumana Wewa 2nd Junction, Kumana Wewa 3rd Junction Bowaththagala",
+    "correlation_details": "Cub of KLF10 (2023 litter)\nObserved mating with KLF23\nObserved together with KLF23\u2019s cub (2025 litter)\nList of Leopards",
+    "image_path_list": [
+        "images/KLM39/image_1.jpeg",
+        "images/KLM39/image_2.jpeg",
+        "images/KLM39/image_3.jpeg",
+        "images/KLM39/image_4.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": "KLF10"
+}

@@ -1,0 +1,16 @@
+{
+    "id": "KLM35",
+    "name": "Alpha",
+    "gender": "M",
+    "location_details": "",
+    "correlation_details": "Cub of KLF1 (2023 litter)\nObserved together with KLM31\nList of Leopards",
+    "image_path_list": [
+        "images/KLM35/image_1.jpeg",
+        "images/KLM35/image_2.jpeg",
+        "images/KLM35/image_3.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": "KLF1"
+}

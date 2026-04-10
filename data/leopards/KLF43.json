@@ -1,0 +1,16 @@
+{
+    "id": "KLF43",
+    "name": "Nirvi",
+    "gender": "F",
+    "location_details": "Between Kongallena and Bowaththagala Junction",
+    "correlation_details": "",
+    "image_path_list": [
+        "images/KLF43/image_1.jpeg",
+        "images/KLF43/image_2.jpeg",
+        "images/KLF43/image_3.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

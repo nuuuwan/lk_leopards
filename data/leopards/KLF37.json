@@ -1,0 +1,17 @@
+{
+    "id": "KLF37",
+    "name": "Maala",
+    "gender": "F",
+    "location_details": "Girikula, Orukema East, Yoda Lipa, Kuluwana",
+    "correlation_details": "",
+    "image_path_list": [
+        "images/KLF37/image_1.jpeg",
+        "images/KLF37/image_2.jpeg",
+        "images/KLF37/image_3.jpeg",
+        "images/KLF37/image_4.jpeg"
+    ],
+    "zone": "A",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

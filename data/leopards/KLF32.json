@@ -1,0 +1,16 @@
+{
+    "id": "KLF32",
+    "name": "Nula",
+    "gender": "F",
+    "location_details": "Helawa",
+    "correlation_details": "",
+    "image_path_list": [
+        "images/KLF32/image_1.jpeg",
+        "images/KLF32/image_2.jpeg",
+        "images/KLF32/image_3.jpeg"
+    ],
+    "zone": "C",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

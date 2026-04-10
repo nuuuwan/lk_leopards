@@ -1,0 +1,17 @@
+{
+    "id": "KLF45",
+    "name": "Ramya",
+    "gender": "F",
+    "location_details": "Andarakala, Itikala",
+    "correlation_details": "Cub of KLF11 (2024 litter)\nSame litter as KLM 42",
+    "image_path_list": [
+        "images/KLF45/image_1.jpeg",
+        "images/KLF45/image_2.jpeg",
+        "images/KLF45/image_3.jpeg",
+        "images/KLF45/image_4.jpeg"
+    ],
+    "zone": "C",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": "KLF11"
+}

@@ -1,0 +1,15 @@
+{
+    "id": "KLF1",
+    "name": "Raani",
+    "gender": "F",
+    "location_details": "Around Kumana Villuwa, Kumana Wewa Road, Kumana Village Junction",
+    "correlation_details": "Mother of KLM35",
+    "image_path_list": [
+        "images/KLF1/image_1.jpeg",
+        "images/KLF1/image_2.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

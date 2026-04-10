@@ -1,0 +1,16 @@
+{
+    "id": "KLM28",
+    "name": "Chandu",
+    "gender": "M",
+    "location_details": "Kumana Wewa 2nd Junction, Kumana Wewa Road between villuwa junction and wewa 1st junction, Yakala, Boaththagala",
+    "correlation_details": "Observed together with KLF15\nObserved together with KLF10\nObserved together with KLM12\nList of Leopards",
+    "image_path_list": [
+        "images/KLM28/image_1.jpeg",
+        "images/KLM28/image_2.jpeg",
+        "images/KLM28/image_3.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

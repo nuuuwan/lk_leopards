@@ -1,0 +1,15 @@
+{
+    "id": "KLF25",
+    "name": "Kati",
+    "gender": "F",
+    "location_details": "Pnama \u2013 Kumana main road 4th KM Post to 6th KM Post, Panakala",
+    "correlation_details": "",
+    "image_path_list": [
+        "images/KLF25/image_1.jpeg",
+        "images/KLF25/image_2.jpeg"
+    ],
+    "zone": "C",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

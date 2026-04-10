@@ -1,0 +1,18 @@
+{
+    "id": "KLF34",
+    "name": "Arundi",
+    "gender": "F",
+    "location_details": "Welia Ara - River Road, Between Ada Kumbuka 2 and Gal Amuna, Kumana Wewa 1st Junction",
+    "correlation_details": "Observed mating with KLM33",
+    "image_path_list": [
+        "images/KLF34/image_1.jpeg",
+        "images/KLF34/image_2.jpeg",
+        "images/KLF34/image_3.jpeg",
+        "images/KLF34/image_4.jpeg",
+        "images/KLF34/image_5.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

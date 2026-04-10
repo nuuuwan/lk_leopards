@@ -1,0 +1,17 @@
+{
+    "id": "KLF20",
+    "name": "Sugala",
+    "gender": "F",
+    "location_details": "Bagure, Kudavila, Thummulla, Kotalinda Wala, Andarakala, Nelumpathkouna road from Bagure, Okanda Wela, Boaththagalge",
+    "correlation_details": "Cub of KLF7\nSame litter as KLF21",
+    "image_path_list": [
+        "images/KLF20/image_1.jpeg",
+        "images/KLF20/image_2.jpeg",
+        "images/KLF20/image_3.jpeg",
+        "images/KLF20/image_4.jpeg"
+    ],
+    "zone": "A, B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": "KLF7"
+}

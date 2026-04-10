@@ -1,0 +1,15 @@
+{
+    "id": "KLF35",
+    "name": "Nelum",
+    "gender": "F",
+    "location_details": "",
+    "correlation_details": "Cub of KLF29 (2022-2023)",
+    "image_path_list": [
+        "images/KLF35/image_1.jpeg",
+        "images/KLF35/image_2.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": "KLF29"
+}

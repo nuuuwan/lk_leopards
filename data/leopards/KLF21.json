@@ -1,0 +1,16 @@
+{
+    "id": "KLF21",
+    "name": "Suparnaka",
+    "gender": "F",
+    "location_details": "Bagure, Kudavila, Thummulla, Kotalinda Wala, Andarakala, Nelumpathkouna road from Bagure",
+    "correlation_details": "Cub of KLF7\nSame litter as KLF20\nMother of KLM41 (2024 litter)",
+    "image_path_list": [
+        "images/KLF21/image_1.jpeg",
+        "images/KLF21/image_2.jpeg",
+        "images/KLF21/image_3.jpeg"
+    ],
+    "zone": "A, B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": "KLF7"
+}

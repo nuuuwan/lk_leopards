@@ -1,0 +1,17 @@
+{
+    "id": "KLF42",
+    "name": "Meenu",
+    "gender": "F",
+    "location_details": "Godagedipokuna, Beraliyawala, Between Bagura and Godagedipokuna junction",
+    "correlation_details": "Cub of KLF17 (Seen only once together, hence\nuncertain)",
+    "image_path_list": [
+        "images/KLF42/image_1.jpeg",
+        "images/KLF42/image_2.jpeg",
+        "images/KLF42/image_3.jpeg",
+        "images/KLF42/image_4.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": "KLF17"
+}

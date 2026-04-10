@@ -1,0 +1,14 @@
+{
+    "id": "KLF16",
+    "name": "Ramani",
+    "gender": "F",
+    "location_details": "Kumana Wewa road (between Wewa 1st Junction to Villuwa), Villuwa",
+    "correlation_details": "KLF15 - Same litter\nCub of KLF2",
+    "image_path_list": [
+        "images/KLF16/image_1.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": "KLF2"
+}

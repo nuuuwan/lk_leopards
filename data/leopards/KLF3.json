@@ -1,0 +1,16 @@
+{
+    "id": "KLF3",
+    "name": "Devi",
+    "gender": "F",
+    "location_details": "Kumana Wewa road (between Wewa 2nd Junction to 3rd Junction)",
+    "correlation_details": "",
+    "image_path_list": [
+        "images/KLF3/image_1.jpeg",
+        "images/KLF3/image_2.jpeg",
+        "images/KLF3/image_3.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

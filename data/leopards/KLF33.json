@@ -1,0 +1,17 @@
+{
+    "id": "KLF33",
+    "name": "Avi",
+    "gender": "F",
+    "location_details": "Bagure, Palukotawala, Diwulpallama Road, Boraluwala closer to Kotalinda wala",
+    "correlation_details": "Cub of KLF8 (2021-2022)\nSame litter as KLF31\nObserved closer to KLF40",
+    "image_path_list": [
+        "images/KLF33/image_1.jpeg",
+        "images/KLF33/image_2.jpeg",
+        "images/KLF33/image_3.jpeg",
+        "images/KLF33/image_4.jpeg"
+    ],
+    "zone": "A, B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": "KLF8"
+}

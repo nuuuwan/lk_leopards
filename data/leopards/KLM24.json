@@ -1,0 +1,15 @@
+{
+    "id": "KLM24",
+    "name": "Mula",
+    "gender": "M",
+    "location_details": "Eraminiangas Wewa",
+    "correlation_details": "List of Leopards",
+    "image_path_list": [
+        "images/KLM24/image_1.jpeg",
+        "images/KLM24/image_2.jpeg"
+    ],
+    "zone": "B",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

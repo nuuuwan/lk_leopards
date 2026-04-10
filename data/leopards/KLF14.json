@@ -1,0 +1,15 @@
+{
+    "id": "KLF14",
+    "name": "Kiso",
+    "gender": "F",
+    "location_details": "Bagure-Nelumpath Pokuna entrance",
+    "correlation_details": "",
+    "image_path_list": [
+        "images/KLF14/image_1.jpeg",
+        "images/KLF14/image_2.jpeg"
+    ],
+    "zone": "A",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

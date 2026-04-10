@@ -1,0 +1,18 @@
+{
+    "id": "KLF5",
+    "name": "Leela",
+    "gender": "F",
+    "location_details": "Girikula, Palihadamuwala, Yoda Lipa, Orukema Road (Closer to Kuluwana), Kuluwana, Kirigal Ebe Bungalow",
+    "correlation_details": "Mother of KLM6 & KLM10\nSeen together with KLM5\nObserved mating with KLM13",
+    "image_path_list": [
+        "images/KLF5/image_1.jpeg",
+        "images/KLF5/image_2.jpeg",
+        "images/KLF5/image_3.jpeg",
+        "images/KLF5/image_4.jpeg",
+        "images/KLF5/image_5.jpeg"
+    ],
+    "zone": "A",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}

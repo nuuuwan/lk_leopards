@@ -1,0 +1,16 @@
+{
+    "id": "KLM13",
+    "name": "Uti",
+    "gender": "M",
+    "location_details": "Kiripokuna, Yoda Lipa, Kuluwana, Diwulpallama Road near 1st Bund, 3rd Bund, Girikula, Kirigal ebe road, Okanda Wela, Kudaramgala, Bagura",
+    "correlation_details": "Observed mating with KLF5\nObserved mating with KLF8\nObserved mating with KLF31\nObserved mating with KLF6\nObserved mating with KLF36",
+    "image_path_list": [
+        "images/KLM13/image_1.jpeg",
+        "images/KLM13/image_2.jpeg",
+        "images/KLM13/image_3.jpeg"
+    ],
+    "zone": "A",
+    "date_first_seen": "",
+    "date_last_seen": "",
+    "mother_id": ""
+}
