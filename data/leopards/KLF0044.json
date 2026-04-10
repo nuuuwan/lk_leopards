@@ -5,10 +5,10 @@
     "location_details": "Helawa, Kudumbigala",
     "correlation_details": "",
     "image_path_list": [
-        "images/KLF0044/image_1.jpeg",
-        "images/KLF0044/image_2.jpeg",
-        "images/KLF0044/image_3.jpeg",
-        "images/KLF0044/image_4.jpeg"
+        "images/original/KLF0044/image_1.jpeg",
+        "images/original/KLF0044/image_2.jpeg",
+        "images/original/KLF0044/image_3.jpeg",
+        "images/original/KLF0044/image_4.jpeg"
     ],
     "zone_list": [
         "C"

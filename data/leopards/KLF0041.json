@@ -5,9 +5,9 @@
     "location_details": "",
     "correlation_details": "Cub of KLF0024 (2023 litter)",
     "image_path_list": [
-        "images/KLF0041/image_1.jpeg",
-        "images/KLF0041/image_2.jpeg",
-        "images/KLF0041/image_3.jpeg"
+        "images/original/KLF0041/image_1.jpeg",
+        "images/original/KLF0041/image_2.jpeg",
+        "images/original/KLF0041/image_3.jpeg"
     ],
     "zone_list": [
         "A",

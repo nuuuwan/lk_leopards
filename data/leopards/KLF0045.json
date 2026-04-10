@@ -5,10 +5,10 @@
     "location_details": "Andarakala, Itikala",
     "correlation_details": "Cub of KLF0011 (2024 litter)\nSame litter as KLM 42",
     "image_path_list": [
-        "images/KLF0045/image_1.jpeg",
-        "images/KLF0045/image_2.jpeg",
-        "images/KLF0045/image_3.jpeg",
-        "images/KLF0045/image_4.jpeg"
+        "images/original/KLF0045/image_1.jpeg",
+        "images/original/KLF0045/image_2.jpeg",
+        "images/original/KLF0045/image_3.jpeg",
+        "images/original/KLF0045/image_4.jpeg"
     ],
     "zone_list": [
         "C"

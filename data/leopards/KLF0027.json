@@ -5,10 +5,10 @@
     "location_details": "Gal Amuna, River Road, Kumana Wewa 1st Junction, Kumana Wewa 2nd Junction, Villu",
     "correlation_details": "",
     "image_path_list": [
-        "images/KLF0027/image_1.jpeg",
-        "images/KLF0027/image_2.jpeg",
-        "images/KLF0027/image_3.jpeg",
-        "images/KLF0027/image_4.jpeg"
+        "images/original/KLF0027/image_1.jpeg",
+        "images/original/KLF0027/image_2.jpeg",
+        "images/original/KLF0027/image_3.jpeg",
+        "images/original/KLF0027/image_4.jpeg"
     ],
     "zone_list": [
         "B"

@@ -5,10 +5,10 @@
     "location_details": "Girikula, Orukema East, Yoda Lipa, Kuluwana",
     "correlation_details": "",
     "image_path_list": [
-        "images/KLF0037/image_1.jpeg",
-        "images/KLF0037/image_2.jpeg",
-        "images/KLF0037/image_3.jpeg",
-        "images/KLF0037/image_4.jpeg"
+        "images/original/KLF0037/image_1.jpeg",
+        "images/original/KLF0037/image_2.jpeg",
+        "images/original/KLF0037/image_3.jpeg",
+        "images/original/KLF0037/image_4.jpeg"
     ],
     "zone_list": [
         "A"

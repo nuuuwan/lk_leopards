@@ -5,8 +5,8 @@
     "location_details": "Kumana Wewa 3rd Junction",
     "correlation_details": "Observed together with KLF0010",
     "image_path_list": [
-        "images/KLF0030/image_1.jpeg",
-        "images/KLF0030/image_2.jpeg"
+        "images/original/KLF0030/image_1.jpeg",
+        "images/original/KLF0030/image_2.jpeg"
     ],
     "zone_list": [
         "B"

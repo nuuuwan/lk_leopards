@@ -5,10 +5,10 @@
     "location_details": "Yoda Lipa, Orukema Road entrance from Kuluwana, Kiripokuna road 3rd bund, Babaragasthalawa Road",
     "correlation_details": "Observed fighting with KLM0002\nObserved mating with KLF0036\nList of Leopards",
     "image_path_list": [
-        "images/KLM0029/image_1.jpeg",
-        "images/KLM0029/image_2.jpeg",
-        "images/KLM0029/image_3.jpeg",
-        "images/KLM0029/image_4.jpeg"
+        "images/original/KLM0029/image_1.jpeg",
+        "images/original/KLM0029/image_2.jpeg",
+        "images/original/KLM0029/image_3.jpeg",
+        "images/original/KLM0029/image_4.jpeg"
     ],
     "zone_list": [
         "A"

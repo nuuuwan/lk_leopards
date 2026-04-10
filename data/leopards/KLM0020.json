@@ -5,8 +5,8 @@
     "location_details": "6th KM Post, Panakala",
     "correlation_details": "List of Leopards",
     "image_path_list": [
-        "images/KLM0020/image_1.jpeg",
-        "images/KLM0020/image_2.jpeg"
+        "images/original/KLM0020/image_1.jpeg",
+        "images/original/KLM0020/image_2.jpeg"
     ],
     "zone_list": [
         "C"

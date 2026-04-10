@@ -5,8 +5,8 @@
     "location_details": "Around Kumana Villuwa, Kumana Wewa Road, Kumana Village Junction",
     "correlation_details": "Mother of KLM0035",
     "image_path_list": [
-        "images/KLF0001/image_1.jpeg",
-        "images/KLF0001/image_2.jpeg"
+        "images/original/KLF0001/image_1.jpeg",
+        "images/original/KLF0001/image_2.jpeg"
     ],
     "zone_list": [
         "B"

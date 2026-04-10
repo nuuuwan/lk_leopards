@@ -5,11 +5,11 @@
     "location_details": "Girikula, Palihadamuwala, Yoda Lipa, Orukema Road (Closer to Kuluwana), Kuluwana, Kirigal Ebe Bungalow",
     "correlation_details": "Mother of KLM0006 & KLM0010\nSeen together with KLM0005\nObserved mating with KLM0013",
     "image_path_list": [
-        "images/KLF0005/image_1.jpeg",
-        "images/KLF0005/image_2.jpeg",
-        "images/KLF0005/image_3.jpeg",
-        "images/KLF0005/image_4.jpeg",
-        "images/KLF0005/image_5.jpeg"
+        "images/original/KLF0005/image_1.jpeg",
+        "images/original/KLF0005/image_2.jpeg",
+        "images/original/KLF0005/image_3.jpeg",
+        "images/original/KLF0005/image_4.jpeg",
+        "images/original/KLF0005/image_5.jpeg"
     ],
     "zone_list": [
         "A"

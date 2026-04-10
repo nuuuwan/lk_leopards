@@ -5,8 +5,8 @@
     "location_details": "Eraminiangas Wewa",
     "correlation_details": "List of Leopards",
     "image_path_list": [
-        "images/KLM0024/image_1.jpeg",
-        "images/KLM0024/image_2.jpeg"
+        "images/original/KLM0024/image_1.jpeg",
+        "images/original/KLM0024/image_2.jpeg"
     ],
     "zone_list": [
         "B"

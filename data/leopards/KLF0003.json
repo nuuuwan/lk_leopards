@@ -5,9 +5,9 @@
     "location_details": "Kumana Wewa road (between Wewa 2nd Junction to 3rd Junction)",
     "correlation_details": "",
     "image_path_list": [
-        "images/KLF0003/image_1.jpeg",
-        "images/KLF0003/image_2.jpeg",
-        "images/KLF0003/image_3.jpeg"
+        "images/original/KLF0003/image_1.jpeg",
+        "images/original/KLF0003/image_2.jpeg",
+        "images/original/KLF0003/image_3.jpeg"
     ],
     "zone_list": [
         "B"

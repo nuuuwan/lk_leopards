@@ -5,10 +5,10 @@
     "location_details": "Eraminiyan Wewa, Gal Amuna, Weli Ara, Aluthgama Wewa road, Kumana Wewa 1st Junction",
     "correlation_details": "Seen together with KLM0025\nSeen together with KLM0033\nMother of KLF0041",
     "image_path_list": [
-        "images/KLF0024/image_1.jpeg",
-        "images/KLF0024/image_2.jpeg",
-        "images/KLF0024/image_3.jpeg",
-        "images/KLF0024/image_4.jpeg"
+        "images/original/KLF0024/image_1.jpeg",
+        "images/original/KLF0024/image_2.jpeg",
+        "images/original/KLF0024/image_3.jpeg",
+        "images/original/KLF0024/image_4.jpeg"
     ],
     "zone_list": [
         "B"

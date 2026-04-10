@@ -5,10 +5,10 @@
     "location_details": "Nelumpathpokuna road closer to Beraliyawala, Itikala, Nelumpathpokuna, Kongal lena",
     "correlation_details": "List of Leopards",
     "image_path_list": [
-        "images/KLM0036/image_1.jpeg",
-        "images/KLM0036/image_2.jpeg",
-        "images/KLM0036/image_3.jpeg",
-        "images/KLM0036/image_4.jpeg"
+        "images/original/KLM0036/image_1.jpeg",
+        "images/original/KLM0036/image_2.jpeg",
+        "images/original/KLM0036/image_3.jpeg",
+        "images/original/KLM0036/image_4.jpeg"
     ],
     "zone_list": [
         "B"

@@ -5,9 +5,9 @@
     "location_details": "Oru kema, Girikula, Okanda Wela, Park Entrance, Palihademuwala, Helawa",
     "correlation_details": "Mother of KLM0003 & KLM0004",
     "image_path_list": [
-        "images/KLF0009/image_1.jpeg",
-        "images/KLF0009/image_2.jpeg",
-        "images/KLF0009/image_3.jpeg"
+        "images/original/KLF0009/image_1.jpeg",
+        "images/original/KLF0009/image_2.jpeg",
+        "images/original/KLF0009/image_3.jpeg"
     ],
     "zone_list": [
         "A"

@@ -5,11 +5,11 @@
     "location_details": "Eda Kumbuka 1, Kumana Village Junction",
     "correlation_details": "",
     "image_path_list": [
-        "images/KLF0039/image_1.jpeg",
-        "images/KLF0039/image_2.jpeg",
-        "images/KLF0039/image_3.jpeg",
-        "images/KLF0039/image_4.jpeg",
-        "images/KLF0039/image_5.jpeg"
+        "images/original/KLF0039/image_1.jpeg",
+        "images/original/KLF0039/image_2.jpeg",
+        "images/original/KLF0039/image_3.jpeg",
+        "images/original/KLF0039/image_4.jpeg",
+        "images/original/KLF0039/image_5.jpeg"
     ],
     "zone_list": [
         "B"

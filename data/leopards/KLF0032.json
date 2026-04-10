@@ -5,9 +5,9 @@
     "location_details": "Helawa",
     "correlation_details": "",
     "image_path_list": [
-        "images/KLF0032/image_1.jpeg",
-        "images/KLF0032/image_2.jpeg",
-        "images/KLF0032/image_3.jpeg"
+        "images/original/KLF0032/image_1.jpeg",
+        "images/original/KLF0032/image_2.jpeg",
+        "images/original/KLF0032/image_3.jpeg"
     ],
     "zone_list": [
         "C"

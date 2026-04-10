@@ -5,10 +5,10 @@
     "location_details": "Aluthgama Wewa Junction, Nelumpathpokuna, Beraliyawala",
     "correlation_details": "",
     "image_path_list": [
-        "images/KLM0015/image_1.jpeg",
-        "images/KLM0015/image_2.jpeg",
-        "images/KLM0015/image_3.jpeg",
-        "images/KLM0015/image_4.jpeg"
+        "images/original/KLM0015/image_1.jpeg",
+        "images/original/KLM0015/image_2.jpeg",
+        "images/original/KLM0015/image_3.jpeg",
+        "images/original/KLM0015/image_4.jpeg"
     ],
     "zone_list": [
         "B"

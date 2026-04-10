@@ -5,10 +5,10 @@
     "location_details": "Yakala, Kumana Wewa Road 1st junction, Villuwa",
     "correlation_details": "KLF0011 - Same litter\nCub of KLF0002",
     "image_path_list": [
-        "images/KLF0004/image_1.jpeg",
-        "images/KLF0004/image_2.jpeg",
-        "images/KLF0004/image_3.jpeg",
-        "images/KLF0004/image_4.jpeg"
+        "images/original/KLF0004/image_1.jpeg",
+        "images/original/KLF0004/image_2.jpeg",
+        "images/original/KLF0004/image_3.jpeg",
+        "images/original/KLF0004/image_4.jpeg"
     ],
     "zone_list": [
         "B"

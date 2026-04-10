@@ -5,9 +5,9 @@
     "location_details": "Kumana Wewa 2nd Junction, Kumana Wewa Road between villuwa junction and wewa 1st junction, Yakala, Boaththagala",
     "correlation_details": "Observed together with KLF0015\nObserved together with KLF0010\nObserved together with KLM0012\nList of Leopards",
     "image_path_list": [
-        "images/KLM0028/image_1.jpeg",
-        "images/KLM0028/image_2.jpeg",
-        "images/KLM0028/image_3.jpeg"
+        "images/original/KLM0028/image_1.jpeg",
+        "images/original/KLM0028/image_2.jpeg",
+        "images/original/KLM0028/image_3.jpeg"
     ],
     "zone_list": [
         "B"

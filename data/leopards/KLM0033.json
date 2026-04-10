@@ -5,10 +5,10 @@
     "location_details": "Kumana Wewa 1st Junction, Kumana Wewa 2nd junction, Kumana Wewa 3rd junction, Eraminiyan Wewa Bowaththagala Junct toward Nelumpath",
     "correlation_details": "Observed together with KLM0031\nObserved mating with KLF0010\nObserved together with KLF0024\nObserved together with KLM0039\nObserved mating with KLF0013\nObserved mating with KLF0034\nList of Leopards",
     "image_path_list": [
-        "images/KLM0033/image_1.jpeg",
-        "images/KLM0033/image_2.jpeg",
-        "images/KLM0033/image_3.jpeg",
-        "images/KLM0033/image_4.jpeg"
+        "images/original/KLM0033/image_1.jpeg",
+        "images/original/KLM0033/image_2.jpeg",
+        "images/original/KLM0033/image_3.jpeg",
+        "images/original/KLM0033/image_4.jpeg"
     ],
     "zone_list": [
         "B"

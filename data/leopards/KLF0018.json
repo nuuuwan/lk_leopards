@@ -5,9 +5,9 @@
     "location_details": "Itikala, Andarakala",
     "correlation_details": "KLM0014 - Same litter",
     "image_path_list": [
-        "images/KLF0018/image_1.jpeg",
-        "images/KLF0018/image_2.jpeg",
-        "images/KLF0018/image_3.jpeg"
+        "images/original/KLF0018/image_1.jpeg",
+        "images/original/KLF0018/image_2.jpeg",
+        "images/original/KLF0018/image_3.jpeg"
     ],
     "zone_list": [
         "B"

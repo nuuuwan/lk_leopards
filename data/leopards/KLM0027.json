@@ -5,10 +5,10 @@
     "location_details": "Kumana Wewa 2nd Junction, Eraminiyangas Wewa, Boaththagala Junction, Kumana Villu",
     "correlation_details": "Seen together with KLF0010, KLM0031\nSeen together with KLF0023\nObserved mating with KLF0010\nList of Leopards",
     "image_path_list": [
-        "images/KLM0027/image_1.jpeg",
-        "images/KLM0027/image_2.jpeg",
-        "images/KLM0027/image_3.jpeg",
-        "images/KLM0027/image_4.jpeg"
+        "images/original/KLM0027/image_1.jpeg",
+        "images/original/KLM0027/image_2.jpeg",
+        "images/original/KLM0027/image_3.jpeg",
+        "images/original/KLM0027/image_4.jpeg"
     ],
     "zone_list": [
         "B"
