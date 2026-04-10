@@ -1,3 +1,5 @@
+import json
+import os
 from dataclasses import dataclass
 
 
@@ -13,3 +15,11 @@ class Leopard:
     date_first_seen: str
     date_last_seen: str
     mother_id: str
+
+    @property
+    def json_path(self):
+        return os.path.join("data", "leopards", f"{self.id}.json")
+
+    def write(self):
+        with open(self.json_path, "w") as f:
+            json.dump(self.__dict__, f, indent=4)
