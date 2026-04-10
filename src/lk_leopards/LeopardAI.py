@@ -7,15 +7,9 @@ import torchvision.transforms as tv_transforms
 from PIL import Image
 from rich.console import Console
 from rich.panel import Panel
-from rich.progress import (
-    BarColumn,
-    MofNCompleteColumn,
-    Progress,
-    SpinnerColumn,
-    TextColumn,
-    TimeElapsedColumn,
-    TimeRemainingColumn,
-)
+from rich.progress import (BarColumn, MofNCompleteColumn, Progress,
+                           SpinnerColumn, TextColumn, TimeElapsedColumn,
+                           TimeRemainingColumn)
 
 from lk_leopards.Leopard import Leopard
 
@@ -76,13 +70,17 @@ class LeopardAI:
             try:
                 fingerprints.append(self.embed_image(image_path))
             except Exception as e:
-                console.print(f"[yellow]⚠ Skipping {image_path}:[/yellow] {e}")
+                console.print(
+                    f"[yellow]⚠ Skipping {image_path}:[/yellow] {e}"
+                )
         return fingerprints
 
     @staticmethod
     def _fingerprint_path(leopard_id: str, image_path: str) -> str:
         image_stem = os.path.splitext(os.path.basename(image_path))[0]
-        return os.path.join(FINGERPRINTS_DIR, leopard_id, f"{image_stem}.json")
+        return os.path.join(
+            FINGERPRINTS_DIR, leopard_id, f"{image_stem}.json"
+        )
 
     def build_fingerprints(self):
         """Compute embeddings for every leopard image and write to
@@ -129,7 +127,8 @@ class LeopardAI:
                 image_name = os.path.basename(image_path)
                 progress.update(
                     task_id,
-                    description=f"[cyan]{leopard.id}[/cyan] [dim]{image_name}[/dim]",
+                    description=f"[cyan]{
+                        leopard.id}[/cyan] [dim]{image_name}[/dim]",
                 )
                 out_path = self._fingerprint_path(leopard.id, image_path)
                 os.makedirs(os.path.dirname(out_path), exist_ok=True)
@@ -142,7 +141,8 @@ class LeopardAI:
                     )
                 except Exception as e:
                     console.log(
-                        f"[yellow]⚠[/yellow] Skipping {leopard.id}/{image_name}: {e}"
+                        f"[yellow]⚠[/yellow] Skipping {
+                            leopard.id}/{image_name}: {e}"
                     )
                 with open(out_path, "w", encoding="utf-8") as f:
                     json.dump(embedding, f, indent=4)

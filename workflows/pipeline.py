@@ -14,11 +14,8 @@ _stderr_fd = os.dup(2)
 os.dup2(_devnull, 2)
 os.close(_devnull)
 
-from lk_leopards import (
-    LeopardAI,
-    ReadMeBuilder,
-    SimilarityBuilder,
-)  # noqa: E402 (imports TF/DeepFace)
+from lk_leopards import (LeopardAI,  # noqa: E402 (imports TF/DeepFace)
+                         ReadMeBuilder, SimilarityBuilder)
 
 # Restore stderr so Rich console output works normally
 os.dup2(_stderr_fd, 2)

@@ -4,14 +4,8 @@ import os
 import numpy as np
 from rich.console import Console
 from rich.panel import Panel
-from rich.progress import (
-    BarColumn,
-    MofNCompleteColumn,
-    Progress,
-    SpinnerColumn,
-    TextColumn,
-    TimeElapsedColumn,
-)
+from rich.progress import (BarColumn, MofNCompleteColumn, Progress,
+                           SpinnerColumn, TextColumn, TimeElapsedColumn)
 
 FINGERPRINTS_DIR = os.path.join("data", "finger_prints")
 SIMILARITY_PATH = os.path.join("data", "similarity.json")
@@ -68,7 +62,8 @@ class SimilarityBuilder:
         console.print(
             "[dim]Computing pairwise cosine similarity matrix...[/dim]"
         )
-        # Embeddings are already L2-normalised → dot product == cosine similarity
+        # Embeddings are already L2-normalised → dot product == cosine
+        # similarity
         sim: np.ndarray = mat @ mat.T  # (N × N)
         console.print(f"[green]✓[/green] Similarity matrix: {n}×{n}")
 
@@ -124,7 +119,8 @@ class SimilarityBuilder:
         console.print(
             Panel.fit(
                 f"[bold green]✓ Done![/bold green] Wrote similarities for "
-                f"[bold]{len(result)}[/bold] images to [dim]{SIMILARITY_PATH}[/dim]",
+                f"[bold]{
+                    len(result)}[/bold] images to [dim]{SIMILARITY_PATH}[/dim]",
                 title="[bold]Complete[/bold]",
             )
         )

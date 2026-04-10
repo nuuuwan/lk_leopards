@@ -55,7 +55,9 @@ class LeopardDocParser:
     def _parse_date_table(self, doc) -> dict[str, tuple[str, str]]:
         """Parse pages 13–15 and return {leopard_id: (first_seen, last_seen)}."""
         lines = []
-        for page_num in range(self.FIRST_TABLE_PAGE - 1, self.LAST_TABLE_PAGE):
+        for page_num in range(
+            self.FIRST_TABLE_PAGE - 1, self.LAST_TABLE_PAGE
+        ):
             for line in doc[page_num].get_text().split("\n"):
                 line = line.strip()
                 if (
@@ -74,7 +76,7 @@ class LeopardDocParser:
                 j = i + 1
                 while j < len(lines) and not self.RE_SEQ_NUM.match(lines[j]):
                     j += 1
-                record_lines = lines[i + 1 : j]
+                record_lines = lines[i + 1: j]
 
                 # Extract leopard ID
                 leopard_id = None
@@ -85,7 +87,9 @@ class LeopardDocParser:
                         break
 
                 if leopard_id:
-                    tokens = self.RE_DATE_TOKEN.findall(" ".join(record_lines))
+                    tokens = self.RE_DATE_TOKEN.findall(
+                        " ".join(record_lines)
+                    )
                     dates[leopard_id] = (
                         (
                             self._format_date(tokens[0])
@@ -138,7 +142,7 @@ class LeopardDocParser:
         if corr_idx is None:
             return None
 
-        table_lines = [line for line in lines[corr_idx + 1 :] if line]
+        table_lines = [line for line in lines[corr_idx + 1:] if line]
 
         # --- Find "Zone – X" line ---
         zone_idx = next(
@@ -174,7 +178,7 @@ class LeopardDocParser:
 
         # --- Correlation: lines after Zone until "Get more details" ---
         corr_lines = []
-        for line in table_lines[zone_idx + 1 :]:
+        for line in table_lines[zone_idx + 1:]:
             if line.startswith("Get more details"):
                 break
             corr_lines.append(line)

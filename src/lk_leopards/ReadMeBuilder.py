@@ -51,7 +51,8 @@ class ReadMeBuilder:
         with open(SIMILARITY_PATH, encoding="utf-8") as f:
             similarity: dict = json.load(f)
 
-        # Collect unique cross-leopard pairs (different leopard IDs) with highest scores
+        # Collect unique cross-leopard pairs (different leopard IDs) with
+        # highest scores
         seen: set[frozenset] = set()
         pairs: list[tuple[float, str, str]] = []
         for src_key, matches in similarity.items():
