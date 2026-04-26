@@ -22,7 +22,7 @@ from rich.progress import (
 
 from lk_leopards.Leopard import Leopard
 
-FINGERPRINTS_DIR = os.path.join("data", "finger_prints")
+FINGERPRINTS_DIR = os.path.join("data", "fingerprints")
 FACES_DIR = os.path.join("images", "faces")
 FACE_DETECTED_DIR = os.path.join("images", "face_detected")
 

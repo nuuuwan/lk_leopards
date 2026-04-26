@@ -35,3 +35,4 @@ if __name__ == "__main__":
     ai = LeopardAI()
     ai.build_face_detected(max_images=args.n)
     ai.build_faces_from_detected(max_images=args.n)
+    ai.build_fingerprints()
