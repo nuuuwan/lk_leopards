@@ -31,17 +31,16 @@ FACE_DETECTED_DIR = os.path.join("images", "face_detected")
 # Adjust them if you're getting too many missed detections (raise thresholds)
 # or too many false positives (lower thresholds).
 
-# Which COCO animal categories the detector is allowed to match.
-# IDs 16–25 cover: cat, dog, horse, sheep, cow, elephant, bear, zebra,
-# giraffe, and a catch-all.  Leopards are not a named COCO class, so the
-# detector matches the nearest animal shape.  Leave this alone.
+# Which COCO category the detector must match for a detection to be accepted.
+# 17 = cat — the closest COCO class to a leopard.  Detections with any other
+# label (e.g. dog, giraffe) are discarded even if the score is high.
 _ANIMAL_LABELS = frozenset({17})  # 17 = cat
 
 # How confident the detector must be before we trust a body detection.
 # Range: 0.0 – 1.0.  Higher → fewer but more reliable detections.
 # Lower → more detections, but also more false positives.
 # Try 0.7 if too many images are being skipped; try 0.95 to reduce noise.
-_BODY_SCORE_THRESHOLD = 0.5
+_BODY_SCORE_THRESHOLD = 0.25
 
 # Maximum allowed width-to-height ratio of the body bounding box.
 # A value of 1 means only accept boxes that are taller than they are wide
@@ -54,29 +53,29 @@ _MAX_BODY_RATIO = 1
 # Higher → only crisp, well-focused head regions are accepted.
 # Lower → blurrier images pass through (useful if your photos are soft).
 # Typical range to experiment with: 50–150.
-_MIN_LAPLACIAN_VAR = 80.0
+_MIN_LAPLACIAN_VAR = 150
 
 # What fraction of the body box height becomes the head crop.
 # 0.55 means the top 55 % of the detected body box is treated as the head.
 # Increase slightly (e.g. 0.65) if the crop cuts off the chin;
 # decrease (e.g. 0.45) if it includes too much of the neck/chest.
-_HEAD_HEIGHT_FRAC = 0.6
+_HEAD_HEIGHT_FRAC = 1
 
 # Extra horizontal padding added on each side of the head crop, as a
 # fraction of the body-box width.  0.12 adds 12 % on each side.
 # Increase if ears are being clipped; decrease if background is distracting.
-_HEAD_PAD = 0.12
+_HEAD_PAD = 0.0
 
 # Extra padding added above the head crop (for ears and the top of the head),
 # as a fraction of the body-box height.  0.18 adds 18 % above.
 # Increase if the top of the head is cut off in saved crops.
-_HEAD_PAD_TOP = 0.18
+_HEAD_PAD_TOP = 0.0
 
 # Whole-image sharpness threshold checked before running the detector.
 # Images blurrier than this are skipped immediately (saves time).
 # Lower → fewer images skipped up front; higher → faster pipeline overall.
 # Set to 0 to disable this early exit entirely.
-_GLOBAL_BLUR_THRESHOLD = 40.0
+_GLOBAL_BLUR_THRESHOLD = 0
 
 # Number of face images processed together in one GPU/CPU forward pass
 # during the embedding step.  Larger batches are faster on GPU/MPS but
@@ -147,8 +146,8 @@ class LeopardAI:
 
     def _compute_frontal_head_bbox(
         self, img: Image.Image
-    ) -> tuple[tuple[int, int, int, int], float] | None:
-        """Return ((x1, y1, x2, y2), score) for the head crop, or None.
+    ) -> tuple[tuple[int, int, int, int], float] | tuple[None, str]:
+        """Return ((x1, y1, x2, y2), score) or (None, reason) on rejection.
 
         Uses FasterRCNN body detection + portrait-ratio gate + Laplacian
         sharpness gate.  The score is the FasterRCNN detection confidence.
@@ -156,10 +155,12 @@ class LeopardAI:
         # Cheap early exit: skip heavily blurred images before running
         # the expensive FasterRCNN forward pass.
         gray_full = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2GRAY)
-        if float(cv2.Laplacian(gray_full, cv2.CV_64F).var()) < (
-            _GLOBAL_BLUR_THRESHOLD
-        ):
-            return None
+        global_var = float(cv2.Laplacian(gray_full, cv2.CV_64F).var())
+        if global_var < _GLOBAL_BLUR_THRESHOLD:
+            return None, (
+                f"image too blurry "
+                f"(var={global_var:.1f} < {_GLOBAL_BLUR_THRESHOLD})"
+            )
 
         iw, ih = img.size
         tensor = tv_functional.to_tensor(img).unsqueeze(0).to(self._device)
@@ -170,14 +171,26 @@ class LeopardAI:
         scores = pred["scores"]
         labels = pred["labels"]
 
-        keep = [
-            i
-            for i in range(len(scores))
-            if scores[i].item() >= _BODY_SCORE_THRESHOLD
-            and labels[i].item() in _ANIMAL_LABELS
+        n = len(scores)
+        # Only consider detections whose label is in the allowed set.
+        label_pass = [
+            i for i in range(n) if labels[i].item() in _ANIMAL_LABELS
         ]
+        # Of those, keep only the ones that also pass the score threshold.
+        keep = [
+            i for i in label_pass if scores[i].item() >= _BODY_SCORE_THRESHOLD
+        ]
+
         if not keep:
-            return None
+            if not label_pass:
+                return None, "no allowed-label detections"
+            # Allowed label found but score too low — report its best score.
+            best_i = max(label_pass, key=lambda i: scores[i].item())
+            best_score = round(scores[best_i].item(), 4)
+            return None, (
+                f"best allowed-label score {best_score} "
+                f"< threshold {_BODY_SCORE_THRESHOLD}"
+            )
 
         best = max(keep, key=lambda i: scores[i].item())
         score = round(scores[best].item(), 4)
@@ -187,8 +200,11 @@ class LeopardAI:
         bw, bh = x2 - x1, y2 - y1
 
         # Gate 1 — portrait ratio: wide box → animal is walking sideways.
-        if bw / max(bh, 1) > _MAX_BODY_RATIO:
-            return None
+        ratio = round(bw / max(bh, 1), 3)
+        if ratio > _MAX_BODY_RATIO:
+            return None, (
+                f"body box too wide " f"(ratio={ratio} > {_MAX_BODY_RATIO})"
+            )
 
         # Head crop: upper portion of the portrait bounding box.
         head_y2 = y1 + min(bw * 1.15, bh * _HEAD_HEIGHT_FRAC)
@@ -204,7 +220,10 @@ class LeopardAI:
         gray = cv2.cvtColor(np.array(head), cv2.COLOR_RGB2GRAY)
         lap_var = float(cv2.Laplacian(gray, cv2.CV_64F).var())
         if lap_var < _MIN_LAPLACIAN_VAR:
-            return None
+            return None, (
+                f"head too blurry "
+                f"(var={lap_var:.1f} < {_MIN_LAPLACIAN_VAR})"
+            )
 
         return (int(hx1), int(hy1), int(hx2), int(hy2)), score
 
@@ -213,10 +232,9 @@ class LeopardAI:
 
         Returns ``None`` when no qualifying frontal face is found.
         """
-        result = self._compute_frontal_head_bbox(img)
-        if result is None:
+        bbox, _ = self._compute_frontal_head_bbox(img)
+        if bbox is None:
             return None
-        bbox, _ = result
         return img.crop(bbox)
 
     @staticmethod
@@ -402,14 +420,16 @@ class LeopardAI:
                 try:
                     img = Image.open(image_path).convert("RGB")
                     result = self._compute_frontal_head_bbox(img)
-                    if result is None:
+                    bbox, info = result
+                    if bbox is None:
                         console.log(
                             f"[dim]— {leopard.id}/{image_name}: "
-                            f"no frontal face or precision too low[/dim]"
+                            f"{info}[/dim]"
                         )
                         skipped += 1
                     else:
-                        (x1, y1, x2, y2), precision = result
+                        x1, y1, x2, y2 = bbox
+                        precision = info
                         img_cv = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
                         cv2.rectangle(
                             img_cv, (x1, y1), (x2, y2), (0, 255, 0), 3
@@ -420,7 +440,7 @@ class LeopardAI:
                         precision_log[key] = precision
                         console.log(
                             f"[green]✓[/green] {leopard.id}/{image_name}"
-                            f" precision={precision:.4f}"
+                            f" score={precision:.4f}"
                             f" → bbox ({x1},{y1},{x2},{y2})"
                         )
                         saved += 1
