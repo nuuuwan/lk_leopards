@@ -45,6 +45,11 @@ _HEAD_HEIGHT_FRAC = 0.55
 _HEAD_PAD = 0.12
 # Extra vertical padding above the head crop (for ears / top of head).
 _HEAD_PAD_TOP = 0.18
+# Laplacian variance on the full image below which the image is skipped
+# before running the (expensive) FasterRCNN detector.
+_GLOBAL_BLUR_THRESHOLD = 40.0
+# Number of face images to embed in a single forward pass.
+_EMBED_BATCH_SIZE = 16
 
 console = Console()
 
@@ -74,6 +79,13 @@ class LeopardAI:
     EMBEDDING_DIM = 1280
 
     def __init__(self):
+        self._device = torch.device(
+            "cuda"
+            if torch.cuda.is_available()
+            else "mps"
+            if torch.backends.mps.is_available()
+            else "cpu"
+        )
         self._model = None
         self._body_detector = None
 
@@ -85,7 +97,7 @@ class LeopardAI:
             m = tv_models.efficientnet_b0(weights=weights)
             m.classifier = torch.nn.Identity()
             m.eval()
-            self._model = m
+            self._model = m.to(self._device)
         return self._model
 
     def _get_body_detector(self) -> torch.nn.Module:
@@ -97,7 +109,7 @@ class LeopardAI:
                 weights=weights
             )
             m.eval()
-            self._body_detector = m
+            self._body_detector = m.to(self._device)
         return self._body_detector
 
     # ── Face detection ─────────────────────────────────────────────────────
@@ -110,8 +122,16 @@ class LeopardAI:
         Uses FasterRCNN body detection + portrait-ratio gate + Laplacian
         sharpness gate.  The score is the FasterRCNN detection confidence.
         """
+        # Cheap early exit: skip heavily blurred images before running
+        # the expensive FasterRCNN forward pass.
+        gray_full = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2GRAY)
+        if float(cv2.Laplacian(gray_full, cv2.CV_64F).var()) < (
+            _GLOBAL_BLUR_THRESHOLD
+        ):
+            return None
+
         iw, ih = img.size
-        tensor = tv_functional.to_tensor(img).unsqueeze(0)
+        tensor = tv_functional.to_tensor(img).unsqueeze(0).to(self._device)
         with torch.no_grad():
             pred = self._get_body_detector()(tensor)[0]
 
@@ -193,21 +213,18 @@ class LeopardAI:
         """
         model = self._get_model()
         img = Image.open(image_path).convert("RGB")
-        tensor = _TRANSFORM(img).unsqueeze(0)
+        tensor = _TRANSFORM(img).unsqueeze(0).to(self._device)
         with torch.no_grad():
             feat = model(tensor)
             feat = feat / feat.norm(dim=-1, keepdim=True)
         return feat[0].tolist()
 
-    def build_faces(self):
+    def build_faces(self, force_rebuild: bool = False):
         """Detect frontal leopard faces in every original image.
 
-        Saves a padded face crop to images/faces/<id>/<image> only when:
-        - the cat-face Haar cascade fires on the full image, AND
-        - both eyes are confirmed visible in the upper face ROI.
-
-        Images where no qualifying frontal face is detected are skipped
-        entirely (no file is written).
+        Saves a padded face crop to images/faces/<id>/<image> only when a
+        qualifying frontal face is detected.  Already-processed images are
+        skipped unless ``force_rebuild=True``.
         """
         leopards = sorted(Leopard.list_all(), key=lambda l: l.id)
         all_images = [
@@ -249,6 +266,13 @@ class LeopardAI:
                     task_id,
                     description=f"[cyan]{leopard.id}[/cyan] [dim]{image_name}[/dim]",
                 )
+                face_path = self._face_image_path(image_path)
+                if not force_rebuild and os.path.exists(face_path):
+                    console.log(
+                        f"[dim]— {leopard.id}/{image_name}: cached[/dim]"
+                    )
+                    progress.advance(task_id)
+                    continue
                 try:
                     img = Image.open(image_path).convert("RGB")
                     face = self.detect_frontal_face(img)
@@ -258,7 +282,6 @@ class LeopardAI:
                         )
                         skipped += 1
                     else:
-                        face_path = self._face_image_path(image_path)
                         os.makedirs(os.path.dirname(face_path), exist_ok=True)
                         face.save(face_path)
                         console.log(
@@ -282,13 +305,13 @@ class LeopardAI:
             )
         )
 
-    def build_face_detected(self):
+    def build_face_detected(self, force_rebuild: bool = False):
         """Save original images annotated with a bounding box around the face.
 
         For every original image where a frontal leopard face is detected,
         writes a copy of the full original image with a green rectangle drawn
         around the detected head region to images/face_detected/<id>/<image>.
-        Images with no qualifying frontal face are skipped.
+        Already-processed images are skipped unless ``force_rebuild=True``.
         """
         leopards = sorted(Leopard.list_all(), key=lambda lp: lp.id)
         all_images = [
@@ -334,6 +357,10 @@ class LeopardAI:
                         f"[dim]{image_name}[/dim]"
                     ),
                 )
+                out_path = self._face_detected_image_path(image_path)
+                if not force_rebuild and os.path.exists(out_path):
+                    progress.advance(task_id)
+                    continue
                 try:
                     img = Image.open(image_path).convert("RGB")
                     result = self._compute_frontal_head_bbox(img)
@@ -349,7 +376,6 @@ class LeopardAI:
                         cv2.rectangle(
                             img_cv, (x1, y1), (x2, y2), (0, 255, 0), 3
                         )
-                        out_path = self._face_detected_image_path(image_path)
                         os.makedirs(os.path.dirname(out_path), exist_ok=True)
                         cv2.imwrite(out_path, img_cv)
                         key = f"{leopard.id}/{image_name}"
@@ -401,36 +427,53 @@ class LeopardAI:
         image_stem = os.path.splitext(os.path.basename(image_path))[0]
         return os.path.join(FINGERPRINTS_DIR, leopard_id, f"{image_stem}.json")
 
-    def build_fingerprints(self):
+    def build_fingerprints(self, force_rebuild: bool = False):
         """Compute embeddings for every face image and write to
         data/finger_prints/<leopard_id>/<image_stem>.json.
 
-        Reads from images/faces/ (produced by build_faces()). Images that
-        have no corresponding face file are skipped entirely.
+        Reads from images/faces/ (produced by build_faces()). Images without
+        a face file, or already embedded unless ``force_rebuild=True``, are
+        skipped.  Face images are processed in batches of ``_EMBED_BATCH_SIZE``
+        for GPU/MPS throughput.
         """
-        leopards = sorted(Leopard.list_all(), key=lambda l: l.id)
+        leopards = sorted(Leopard.list_all(), key=lambda leo: leo.id)
         all_images = [
             (leopard, ip)
             for leopard in leopards
             for ip in leopard.image_path_list
         ]
 
+        console.print("[dim]Loading embedder weights...[/dim]")
+        model = self._get_model()
+        console.print(
+            f"[green]✓[/green] Embedder ready "
+            f"([dim]device: {self._device}[/dim])"
+        )
+
+        # Collect work: (leopard, image_path, face_path, out_path)
+        work: list[tuple] = []
+        for leopard, image_path in all_images:
+            face_path = self._face_image_path(image_path)
+            if not os.path.exists(face_path):
+                continue
+            out_path = self._fingerprint_path(leopard.id, image_path)
+            if not force_rebuild and os.path.exists(out_path):
+                continue
+            work.append((leopard, image_path, face_path, out_path))
+
         console.print(
             Panel.fit(
                 f"[bold cyan]LeopardAI — Build Fingerprints[/bold cyan]\n"
                 f"Source: [dim]{FACES_DIR}/[/dim]\n"
                 f"Embedder: [green]{self.MODEL_NAME}[/green]  |  "
-                f"Embedding dim: [green]{self.EMBEDDING_DIM}[/green]\n"
-                f"Leopards: [bold]{len(leopards)}[/bold]  |  "
-                f"Images: [bold]{len(all_images)}[/bold]  |  "
+                f"Dim: [green]{self.EMBEDDING_DIM}[/green]  |  "
+                f"Batch: [green]{_EMBED_BATCH_SIZE}[/green]  |  "
+                f"Device: [green]{self._device}[/green]\n"
+                f"To embed: [bold]{len(work)}[/bold]  |  "
                 f"Output: [dim]{FINGERPRINTS_DIR}/[/dim]",
                 title="[bold]Starting[/bold]",
             )
         )
-
-        console.print("[dim]Loading embedder weights...[/dim]")
-        self._get_model()
-        console.print("[green]✓[/green] Embedder ready.")
 
         progress = Progress(
             SpinnerColumn(),
@@ -444,44 +487,38 @@ class LeopardAI:
 
         with progress:
             task_id = progress.add_task(
-                "Embedding images", total=len(all_images)
+                "Embedding images", total=len(work)
             )
-            for leopard, image_path in all_images:
-                image_name = os.path.basename(image_path)
-                progress.update(
-                    task_id,
-                    description=f"[cyan]{
-                        leopard.id}[/cyan] [dim]{image_name}[/dim]",
-                )
-                out_path = self._fingerprint_path(leopard.id, image_path)
-                # Only embed if a face image was produced by build_faces().
-                face_path = self._face_image_path(image_path)
-                if not os.path.exists(face_path):
-                    console.log(
-                        f"[dim]— {leopard.id}/{image_name}: no face image, skipping[/dim]"
-                    )
-                    progress.advance(task_id)
-                    continue
-                os.makedirs(os.path.dirname(out_path), exist_ok=True)
-                embedding: list[float] = []
-                try:
-                    embedding = self.embed_image(face_path)
+            for batch_start in range(0, len(work), _EMBED_BATCH_SIZE):
+                batch = work[batch_start:batch_start + _EMBED_BATCH_SIZE]
+                imgs = [
+                    Image.open(face_path).convert("RGB")
+                    for _, _, face_path, _ in batch
+                ]
+                tensors = torch.stack(
+                    [_TRANSFORM(i) for i in imgs]
+                ).to(self._device)
+                with torch.no_grad():
+                    feats = model(tensors)
+                    feats = feats / feats.norm(dim=-1, keepdim=True)
+                for (leopard, image_path, _, out_path), feat in zip(
+                    batch, feats
+                ):
+                    embedding = feat.tolist()
+                    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+                    with open(out_path, "w", encoding="utf-8") as f:
+                        json.dump(embedding, f, indent=4)
+                    image_name = os.path.basename(image_path)
                     console.log(
                         f"[green]✓[/green] {leopard.id}/{image_name} "
                         f"→ {len(embedding)}-dim embedding"
                     )
-                except Exception as e:
-                    console.log(
-                        f"[yellow]⚠[/yellow] Skipping {leopard.id}/{image_name}: {e}"
-                    )
-                with open(out_path, "w", encoding="utf-8") as f:
-                    json.dump(embedding, f, indent=4)
-                progress.advance(task_id)
+                    progress.advance(task_id)
 
         console.print(
             Panel.fit(
                 f"[bold green]✓ Done![/bold green] Wrote embeddings for "
-                f"[bold]{len(all_images)}[/bold] images to "
+                f"[bold]{len(work)}[/bold] images to "
                 f"[dim]{FINGERPRINTS_DIR}/[/dim]",
                 title="[bold]Complete[/bold]",
             )
