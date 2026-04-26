@@ -51,13 +51,8 @@ _HEAD_PAD = 0.12
 _HEAD_PAD_TOP = 0.18
 # Cat-face Haar cascade parameters.
 _FACE_CASCADE_SCALE = 1.05
-_FACE_CASCADE_MIN_NEIGHBORS = 2
-_FACE_MIN_SIZE = 20
-# Eye Haar cascade parameters.
-_EYE_CASCADE_SCALE = 1.1
-_EYE_CASCADE_MIN_NEIGHBORS = 1
-# Fraction of face height used as the eye-detection zone (upper portion).
-_EYE_ZONE_HEIGHT_FRAC = 0.60
+_FACE_CASCADE_MIN_NEIGHBORS = 5
+_FACE_MIN_SIZE = 60
 
 console = Console()
 
@@ -90,7 +85,6 @@ class LeopardAI:
         self._model = None
         self._body_detector = None
         self._face_cascade = None
-        self._eye_cascade = None
 
     # ── Model loading ──────────────────────────────────────────────────────
 
@@ -123,12 +117,6 @@ class LeopardAI:
             )
             self._face_cascade = cv2.CascadeClassifier(path)
         return self._face_cascade
-
-    def _get_eye_cascade(self) -> cv2.CascadeClassifier:
-        if self._eye_cascade is None:
-            path = cv2.data.haarcascades + "haarcascade_eye.xml"
-            self._eye_cascade = cv2.CascadeClassifier(path)
-        return self._eye_cascade
 
     # ── Face detection ─────────────────────────────────────────────────────
 
@@ -218,9 +206,13 @@ class LeopardAI:
         hy2 = int(min(float(ih), head_y2 + px))
         head_gray = img_gray[hy1:hy2, hx1:hx2]
 
+        # Apply CLAHE to improve cascade discrimination over spotted coat.
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        head_eq = clahe.apply(head_gray)
+
         # Gate 2 — cat-face cascade (frontal face required).
         faces = self._get_face_cascade().detectMultiScale(
-            head_gray,
+            head_eq,
             scaleFactor=_FACE_CASCADE_SCALE,
             minNeighbors=_FACE_CASCADE_MIN_NEIGHBORS,
             minSize=(_FACE_MIN_SIZE, _FACE_MIN_SIZE),
@@ -240,28 +232,15 @@ class LeopardAI:
         if lap_var < _MIN_LAPLACIAN_VAR:
             return None
 
-        # Gate 4 — both eyes required in the upper face zone.
-        upper_h = int(fh * _EYE_ZONE_HEIGHT_FRAC)
-        upper_face = face_gray[:upper_h, :]
-        eyes = self._get_eye_cascade().detectMultiScale(
-            upper_face,
-            scaleFactor=_EYE_CASCADE_SCALE,
-            minNeighbors=_EYE_CASCADE_MIN_NEIGHBORS,
-        )
-        if len(eyes) < 1:
-            return None
-
         # Nose + mouth feature density.
         nm_score = self._nose_mouth_score(face_gray)
 
         # Composite precision.
         sharpness_norm = min(lap_var / _SHARPNESS_REF, 1.0)
-        eye_score = min(len(eyes) / 2.0, 1.0)
         precision = round(
-            0.30 * detection_score
-            + 0.25 * sharpness_norm
-            + 0.25 * eye_score
-            + 0.20 * nm_score,
+            0.40 * detection_score
+            + 0.35 * sharpness_norm
+            + 0.25 * nm_score,
             4,
         )
         if precision < _MIN_PRECISION:
