@@ -23,6 +23,7 @@ from rich.progress import (
 from lk_leopards.Leopard import Leopard
 
 FINGERPRINTS_DIR = os.path.join("data", "fingerprints")
+SIMILARITY_PATH = os.path.join("data", "similarity.json")
 FACES_DIR = os.path.join("images", "faces")
 FACE_DETECTED_DIR = os.path.join("images", "face_detected")
 
@@ -674,6 +675,83 @@ class LeopardAI:
                 f"[bold green]✓ Done![/bold green] Wrote embeddings for "
                 f"[bold]{len(work)}[/bold] images to "
                 f"[dim]{FINGERPRINTS_DIR}/[/dim]",
+                title="[bold]Complete[/bold]",
+            )
+        )
+
+    def build_similarity(self):
+        """Compute pairwise leopard similarity and write to data/similarity.json.
+
+        For each pair of leopards (A, B), loads all embeddings from
+        data/fingerprints/ and computes the mean cosine similarity across
+        every (image_A, image_B) pair.  Embeddings are already L2-normalised
+        so cosine similarity equals the dot product.
+
+        Output format::
+
+            {"KLF0001": {"KLF0002": 0.81, "KLF0003": 0.64, ...}, ...}
+        """
+        # Load all embeddings: {leopard_id: [[...], [...], ...]}
+        embeddings: dict[str, list[list[float]]] = {}
+        if not os.path.isdir(FINGERPRINTS_DIR):
+            console.print(
+                f"[red]✗[/red] {FINGERPRINTS_DIR} not found — "
+                "run build_fingerprints() first."
+            )
+            return
+        for leopard_id in sorted(os.listdir(FINGERPRINTS_DIR)):
+            leopard_dir = os.path.join(FINGERPRINTS_DIR, leopard_id)
+            if not os.path.isdir(leopard_dir):
+                continue
+            vecs = []
+            for fname in sorted(os.listdir(leopard_dir)):
+                if not fname.endswith(".json"):
+                    continue
+                with open(
+                    os.path.join(leopard_dir, fname), encoding="utf-8"
+                ) as f:
+                    vecs.append(json.load(f))
+            if vecs:
+                embeddings[leopard_id] = vecs
+
+        ids = sorted(embeddings)
+        console.print(
+            Panel.fit(
+                f"[bold cyan]LeopardAI — Build Similarity[/bold cyan]\n"
+                f"Leopards with embeddings: [bold]{len(ids)}[/bold]\n"
+                f"Output: [dim]{SIMILARITY_PATH}[/dim]",
+                title="[bold]Starting[/bold]",
+            )
+        )
+
+        similarity: dict[str, dict[str, float]] = {}
+        for id_a in ids:
+            similarity[id_a] = {}
+            vecs_a = embeddings[id_a]
+            for id_b in ids:
+                if id_a == id_b:
+                    continue
+                vecs_b = embeddings[id_b]
+                # Mean cosine similarity over all (a, b) image pairs.
+                total = 0.0
+                count = 0
+                for va in vecs_a:
+                    for vb in vecs_b:
+                        total += sum(
+                            x * y for x, y in zip(va, vb)
+                        )
+                        count += 1
+                similarity[id_a][id_b] = round(total / count, 6) if count else 0.0
+
+        os.makedirs(os.path.dirname(SIMILARITY_PATH) or ".", exist_ok=True)
+        with open(SIMILARITY_PATH, "w", encoding="utf-8") as f:
+            json.dump(similarity, f, indent=4)
+
+        console.print(
+            Panel.fit(
+                f"[bold green]✓ Done![/bold green] "
+                f"Similarity matrix for [bold]{len(ids)}[/bold] leopards "
+                f"written to [dim]{SIMILARITY_PATH}[/dim]",
                 title="[bold]Complete[/bold]",
             )
         )
