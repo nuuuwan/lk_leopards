@@ -238,9 +238,7 @@ class LeopardAI:
         # Composite precision.
         sharpness_norm = min(lap_var / _SHARPNESS_REF, 1.0)
         precision = round(
-            0.40 * detection_score
-            + 0.35 * sharpness_norm
-            + 0.25 * nm_score,
+            0.40 * detection_score + 0.35 * sharpness_norm + 0.25 * nm_score,
             4,
         )
         if precision < _MIN_PRECISION:
