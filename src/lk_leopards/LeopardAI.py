@@ -31,7 +31,7 @@ FACE_DETECTED_DIR = os.path.join("images", "face_detected")
 # bear, zebra, giraffe, and catch-all); all plausible for a leopard.
 _ANIMAL_LABELS = frozenset(range(16, 26))
 # Minimum confidence score to keep a detection.
-_BODY_SCORE_THRESHOLD = 0.3
+_BODY_SCORE_THRESHOLD = 0.9
 # Maximum width/height ratio of the body bounding box.
 # A portrait box (ratio < this) means the animal is upright / facing camera.
 # A wide box (ratio > this) means the animal is walking sideways.
