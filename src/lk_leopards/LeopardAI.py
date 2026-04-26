@@ -49,6 +49,15 @@ _HEAD_HEIGHT_FRAC = 0.55
 _HEAD_PAD = 0.12
 # Extra vertical padding above the head crop (for ears / top of head).
 _HEAD_PAD_TOP = 0.18
+# Cat-face Haar cascade parameters.
+_FACE_CASCADE_SCALE = 1.05
+_FACE_CASCADE_MIN_NEIGHBORS = 3
+_FACE_MIN_SIZE = 40
+# Eye Haar cascade parameters.
+_EYE_CASCADE_SCALE = 1.1
+_EYE_CASCADE_MIN_NEIGHBORS = 2
+# Fraction of face height used as the eye-detection zone (upper portion).
+_EYE_ZONE_HEIGHT_FRAC = 0.55
 
 console = Console()
 
@@ -80,6 +89,8 @@ class LeopardAI:
     def __init__(self):
         self._model = None
         self._body_detector = None
+        self._face_cascade = None
+        self._eye_cascade = None
 
     # ── Model loading ──────────────────────────────────────────────────────
 
@@ -104,21 +115,72 @@ class LeopardAI:
             self._body_detector = m
         return self._body_detector
 
+    def _get_face_cascade(self) -> cv2.CascadeClassifier:
+        if self._face_cascade is None:
+            path = (
+                cv2.data.haarcascades
+                + "haarcascade_frontalcatface_extended.xml"
+            )
+            self._face_cascade = cv2.CascadeClassifier(path)
+        return self._face_cascade
+
+    def _get_eye_cascade(self) -> cv2.CascadeClassifier:
+        if self._eye_cascade is None:
+            path = cv2.data.haarcascades + "haarcascade_eye.xml"
+            self._eye_cascade = cv2.CascadeClassifier(path)
+        return self._eye_cascade
+
     # ── Face detection ─────────────────────────────────────────────────────
+
+    @staticmethod
+    def _nose_mouth_score(face_gray: np.ndarray) -> float:
+        """Return a 0-1 score for nose and mouth feature presence.
+
+        Nose zone:  centre 50% width, 45-75% of face height.
+        Mouth zone: full width,       60-90% of face height.
+        """
+        fh, fw = face_gray.shape
+        if fh < 10 or fw < 10:
+            return 0.0
+
+        # Nose: compact high-contrast blob in lower-centre face.
+        n_y1, n_y2 = int(fh * 0.45), int(fh * 0.75)
+        n_x1, n_x2 = int(fw * 0.25), int(fw * 0.75)
+        nose_zone = face_gray[n_y1:n_y2, n_x1:n_x2]
+        nose_edges = cv2.Canny(nose_zone, 30, 100)
+        nose_score = min(float(np.mean(nose_edges > 0)) / 0.05, 1.0)
+
+        # Mouth: horizontal edge density in lower face.
+        m_y1, m_y2 = int(fh * 0.60), int(fh * 0.90)
+        mouth_zone = face_gray[m_y1:m_y2, :]
+        mouth_grad = cv2.Sobel(mouth_zone, cv2.CV_64F, 0, 1, ksize=3)
+        mouth_score = min(
+            float(np.mean(np.abs(mouth_grad))) / 5.0, 1.0
+        )
+
+        return (nose_score + mouth_score) / 2.0
 
     def _compute_frontal_head_bbox(
         self, img: Image.Image
     ) -> tuple[tuple[int, int, int, int], float] | None:
         """Return ((x1, y1, x2, y2), precision) or None.
 
-        precision is a composite [0, 1] score:
-          0.4 * detection_confidence
-        + 0.4 * normalised_sharpness   (lap_var / _SHARPNESS_REF, capped at 1)
-        + 0.2 * portrait_score         (1 − aspect_ratio / _MAX_BODY_RATIO)
+        Four-stage pipeline:
+        1. FasterRCNN body detection + portrait-ratio gate.
+        2. Cat-face Haar cascade on head crop  (hard gate — frontal face).
+        3. Eye cascade on upper face: >= 2 eyes (hard gate).
+        4. Sharpness gate on the face crop.
+
+        Composite precision score (0-1):
+          0.30 * FasterRCNN detection score
+        + 0.25 * normalised sharpness  (lap_var / _SHARPNESS_REF, ≤ 1)
+        + 0.25 * eye score             (n_eyes / 2, ≤ 1)
+        + 0.20 * nose-mouth score
 
         Returns None when any hard gate fails or precision < _MIN_PRECISION.
         """
         iw, ih = img.size
+        img_gray = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2GRAY)
         tensor = tv_functional.to_tensor(img).unsqueeze(0)
         with torch.no_grad():
             pred = self._get_body_detector()(tensor)[0]
@@ -148,35 +210,66 @@ class LeopardAI:
         if aspect_ratio > _MAX_BODY_RATIO:
             return None
 
-        # Head crop: upper portion of the portrait bounding box.
+        # Head region from body box.
         head_y2 = y1 + min(bw * 1.15, bh * _HEAD_HEIGHT_FRAC)
         px = bw * _HEAD_PAD
         py_top = bh * _HEAD_PAD_TOP
-        hx1 = max(0.0, x1 - px)
-        hy1 = max(0.0, y1 - py_top)
-        hx2 = min(float(iw), x2 + px)
-        hy2 = min(float(ih), head_y2 + px)
-        head = img.crop((int(hx1), int(hy1), int(hx2), int(hy2)))
+        hx1 = int(max(0.0, x1 - px))
+        hy1 = int(max(0.0, y1 - py_top))
+        hx2 = int(min(float(iw), x2 + px))
+        hy2 = int(min(float(ih), head_y2 + px))
+        head_gray = img_gray[hy1:hy2, hx1:hx2]
 
-        # Gate 2 — sharpness: reject blurry or foliage-occluded crops.
-        gray = cv2.cvtColor(np.array(head), cv2.COLOR_RGB2GRAY)
-        lap_var = float(cv2.Laplacian(gray, cv2.CV_64F).var())
+        # Gate 2 — cat-face cascade (frontal face required).
+        faces = self._get_face_cascade().detectMultiScale(
+            head_gray,
+            scaleFactor=_FACE_CASCADE_SCALE,
+            minNeighbors=_FACE_CASCADE_MIN_NEIGHBORS,
+            minSize=(_FACE_MIN_SIZE, _FACE_MIN_SIZE),
+        )
+        if len(faces) == 0:
+            return None
+
+        fx, fy, fw, fh = max(faces, key=lambda r: r[2] * r[3])
+        face_x1 = hx1 + fx
+        face_y1 = hy1 + fy
+        face_x2 = face_x1 + fw
+        face_y2 = face_y1 + fh
+        face_gray = img_gray[face_y1:face_y2, face_x1:face_x2]
+
+        # Gate 3 — sharpness of the face crop.
+        lap_var = float(cv2.Laplacian(face_gray, cv2.CV_64F).var())
         if lap_var < _MIN_LAPLACIAN_VAR:
             return None
 
-        # Composite precision score.
+        # Gate 4 — both eyes required in the upper face zone.
+        upper_h = int(fh * _EYE_ZONE_HEIGHT_FRAC)
+        upper_face = face_gray[:upper_h, :]
+        eyes = self._get_eye_cascade().detectMultiScale(
+            upper_face,
+            scaleFactor=_EYE_CASCADE_SCALE,
+            minNeighbors=_EYE_CASCADE_MIN_NEIGHBORS,
+        )
+        if len(eyes) < 2:
+            return None
+
+        # Nose + mouth feature density.
+        nm_score = self._nose_mouth_score(face_gray)
+
+        # Composite precision.
         sharpness_norm = min(lap_var / _SHARPNESS_REF, 1.0)
-        portrait_score = max(0.0, 1.0 - aspect_ratio / _MAX_BODY_RATIO)
+        eye_score = min(len(eyes) / 2.0, 1.0)
         precision = round(
-            0.4 * detection_score
-            + 0.4 * sharpness_norm
-            + 0.2 * portrait_score,
+            0.30 * detection_score
+            + 0.25 * sharpness_norm
+            + 0.25 * eye_score
+            + 0.20 * nm_score,
             4,
         )
         if precision < _MIN_PRECISION:
             return None
 
-        return (int(hx1), int(hy1), int(hx2), int(hy2)), precision
+        return (face_x1, face_y1, face_x2, face_y2), precision
 
     def detect_frontal_face(self, img: Image.Image) -> Image.Image | None:
         """Return a padded head crop when the leopard is facing the camera.
