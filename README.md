@@ -17,10 +17,10 @@ The 10 image pairs with the highest cosine similarity score that belong to the *
 
 | Score | Image A | Image B |
 | --- | --- | --- |
-| 0.8585 | KLM0033/image_1 | KLM0033/image_4 |
-| 0.8058 | KLF0044/image_1 | KLF0044/image_4 |
-| 0.7883 | KLF0002/image_1 | KLF0002/image_3 |
-| 0.7386 | KLF0009/image_2 | KLF0009/image_1 |
+| 0.8585 | <img src="images/faces/KLM0033/image_1.jpeg" width="80"/> | <img src="images/faces/KLM0033/image_4.jpeg" width="80"/> |
+| 0.8058 | <img src="images/faces/KLF0044/image_1.jpeg" width="80"/> | <img src="images/faces/KLF0044/image_4.jpeg" width="80"/> |
+| 0.7883 | <img src="images/faces/KLF0002/image_1.jpeg" width="80"/> | <img src="images/faces/KLF0002/image_3.jpeg" width="80"/> |
+| 0.7386 | <img src="images/faces/KLF0009/image_2.jpeg" width="80"/> | <img src="images/faces/KLF0009/image_1.jpeg" width="80"/> |
 
 ## Top Similar Pairs — Different Leopard
 
@@ -28,16 +28,16 @@ The 10 image pairs with the highest cosine similarity score that belong to *diff
 
 | Score | Image A | Image B |
 | --- | --- | --- |
-| 0.9056 | KLF0037/image_1 | KLF0040/image_1 |
-| 0.8983 | KLM0002/image_1 | KLM0032/image_1 |
-| 0.8770 | KLM0026/image_1 | KLM0032/image_1 |
-| 0.8755 | KLF0003/image_3 | KLM0032/image_1 |
-| 0.8747 | KLF0003/image_3 | KLM0026/image_1 |
-| 0.8743 | KLF0002/image_3 | KLM0005/image_1 |
-| 0.8742 | KLF0037/image_1 | KLF0042/image_1 |
-| 0.8737 | KLF0032/image_1 | KLM0032/image_1 |
-| 0.8702 | KLF0003/image_3 | KLM0005/image_1 |
-| 0.8693 | KLF0036/image_1 | KLF0042/image_1 |
+| 0.9056 | <img src="images/faces/KLF0037/image_1.jpeg" width="80"/> | <img src="images/faces/KLF0040/image_1.jpeg" width="80"/> |
+| 0.8983 | <img src="images/faces/KLM0002/image_1.jpeg" width="80"/> | <img src="images/faces/KLM0032/image_1.jpeg" width="80"/> |
+| 0.8770 | <img src="images/faces/KLM0026/image_1.jpeg" width="80"/> | <img src="images/faces/KLM0032/image_1.jpeg" width="80"/> |
+| 0.8755 | <img src="images/faces/KLF0003/image_3.jpeg" width="80"/> | <img src="images/faces/KLM0032/image_1.jpeg" width="80"/> |
+| 0.8747 | <img src="images/faces/KLF0003/image_3.jpeg" width="80"/> | <img src="images/faces/KLM0026/image_1.jpeg" width="80"/> |
+| 0.8743 | <img src="images/faces/KLF0002/image_3.jpeg" width="80"/> | <img src="images/faces/KLM0005/image_1.jpeg" width="80"/> |
+| 0.8742 | <img src="images/faces/KLF0037/image_1.jpeg" width="80"/> | <img src="images/faces/KLF0042/image_1.jpeg" width="80"/> |
+| 0.8737 | <img src="images/faces/KLF0032/image_1.jpeg" width="80"/> | <img src="images/faces/KLM0032/image_1.jpeg" width="80"/> |
+| 0.8702 | <img src="images/faces/KLF0003/image_3.jpeg" width="80"/> | <img src="images/faces/KLM0005/image_1.jpeg" width="80"/> |
+| 0.8693 | <img src="images/faces/KLF0036/image_1.jpeg" width="80"/> | <img src="images/faces/KLF0042/image_1.jpeg" width="80"/> |
 
 ## Leopards
 

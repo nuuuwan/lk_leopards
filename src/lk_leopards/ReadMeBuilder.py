@@ -1,3 +1,4 @@
+import glob
 import json
 import os
 
@@ -73,6 +74,22 @@ class ReadMeBuilder:
         same_pairs.sort(key=lambda x: -x[0])
         diff_pairs.sort(key=lambda x: -x[0])
 
+        def _img_tag(key: str) -> str:
+            """Return an <img> tag for a similarity key like 'KLF0001/image_1'.
+
+            Prefers the face crop; falls back to the original image.
+            Returns the key as plain text if no file is found.
+            """
+            leopard_id, stem = key.split("/", 1)
+            for base in ("images/faces", "images/original"):
+                matches = glob.glob(
+                    os.path.join(base, leopard_id, stem + ".*")
+                )
+                if matches:
+                    path = matches[0].replace("\\", "/")
+                    return f'<img src="{path}" width="80"/>'
+            return key
+
         def _table(
             pairs: list[tuple[float, str, str]], n: int = 10
         ) -> list[str]:
@@ -83,7 +100,9 @@ class ReadMeBuilder:
                 "| --- | --- | --- |",
             ]
             for score, a, b in pairs[:n]:
-                lines.append(f"| {score:.4f} | {a} | {b} |")
+                img_a = _img_tag(a)
+                img_b = _img_tag(b)
+                lines.append(f"| {score:.4f} | {img_a} | {img_b} |")
             return lines
 
         lines = (
