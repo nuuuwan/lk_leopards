@@ -154,9 +154,7 @@ class LeopardAI:
         m_y1, m_y2 = int(fh * 0.60), int(fh * 0.90)
         mouth_zone = face_gray[m_y1:m_y2, :]
         mouth_grad = cv2.Sobel(mouth_zone, cv2.CV_64F, 0, 1, ksize=3)
-        mouth_score = min(
-            float(np.mean(np.abs(mouth_grad))) / 5.0, 1.0
-        )
+        mouth_score = min(float(np.mean(np.abs(mouth_grad))) / 5.0, 1.0)
 
         return (nose_score + mouth_score) / 2.0
 
