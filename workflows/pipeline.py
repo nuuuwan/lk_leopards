@@ -21,4 +21,15 @@ os.dup2(_stderr_fd, 2)
 os.close(_stderr_fd)
 
 if __name__ == "__main__":
-    LeopardAI().build_face_detected()
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-n",
+        type=int,
+        default=None,
+        metavar="N",
+        help="Process only the first N images.",
+    )
+    args = parser.parse_args()
+    LeopardAI().build_face_detected(max_images=args.n)

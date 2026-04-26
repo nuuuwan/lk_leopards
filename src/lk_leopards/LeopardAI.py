@@ -305,13 +305,18 @@ class LeopardAI:
             )
         )
 
-    def build_face_detected(self, force_rebuild: bool = False):
+    def build_face_detected(
+        self,
+        force_rebuild: bool = False,
+        max_images: int | None = None,
+    ):
         """Save original images annotated with a bounding box around the face.
 
         For every original image where a frontal leopard face is detected,
         writes a copy of the full original image with a green rectangle drawn
         around the detected head region to images/face_detected/<id>/<image>.
         Already-processed images are skipped unless ``force_rebuild=True``.
+        Pass ``max_images`` to limit processing to the first N images.
         """
         leopards = sorted(Leopard.list_all(), key=lambda lp: lp.id)
         all_images = [
@@ -319,6 +324,8 @@ class LeopardAI:
             for leopard in leopards
             for ip in leopard.image_path_list
         ]
+        if max_images is not None:
+            all_images = all_images[:max_images]
 
         console.print(
             Panel.fit(
