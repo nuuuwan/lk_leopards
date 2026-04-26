@@ -17,10 +17,10 @@ The 10 image pairs with the highest cosine similarity score that belong to the *
 
 | Score | Image A | Image B |
 | --- | --- | --- |
-| 0.8585 | <img src="images/faces/KLM0033/image_1.jpeg" width="80"/> | <img src="images/faces/KLM0033/image_4.jpeg" width="80"/> |
-| 0.8058 | <img src="images/faces/KLF0044/image_1.jpeg" width="80"/> | <img src="images/faces/KLF0044/image_4.jpeg" width="80"/> |
-| 0.7883 | <img src="images/faces/KLF0002/image_1.jpeg" width="80"/> | <img src="images/faces/KLF0002/image_3.jpeg" width="80"/> |
-| 0.7386 | <img src="images/faces/KLF0009/image_2.jpeg" width="80"/> | <img src="images/faces/KLF0009/image_1.jpeg" width="80"/> |
+| 0.8585 | <img src="images/faces/KLM0033/image_1.jpeg" width="80"/><br/>**KLM0033** Nandi<br/>M · Zone B | <img src="images/faces/KLM0033/image_4.jpeg" width="80"/><br/>**KLM0033** Nandi<br/>M · Zone B |
+| 0.8058 | <img src="images/faces/KLF0044/image_1.jpeg" width="80"/><br/>**KLF0044** Rajani<br/>F · Zone C | <img src="images/faces/KLF0044/image_4.jpeg" width="80"/><br/>**KLF0044** Rajani<br/>F · Zone C |
+| 0.7883 | <img src="images/faces/KLF0002/image_1.jpeg" width="80"/><br/>**KLF0002** Villu<br/>F · Zone B | <img src="images/faces/KLF0002/image_3.jpeg" width="80"/><br/>**KLF0002** Villu<br/>F · Zone B |
+| 0.7386 | <img src="images/faces/KLF0009/image_2.jpeg" width="80"/><br/>**KLF0009** Mitta<br/>F · Zone A | <img src="images/faces/KLF0009/image_1.jpeg" width="80"/><br/>**KLF0009** Mitta<br/>F · Zone A |
 
 ## Top Similar Pairs — Different Leopard
 
@@ -28,16 +28,16 @@ The 10 image pairs with the highest cosine similarity score that belong to *diff
 
 | Score | Image A | Image B |
 | --- | --- | --- |
-| 0.9056 | <img src="images/faces/KLF0037/image_1.jpeg" width="80"/> | <img src="images/faces/KLF0040/image_1.jpeg" width="80"/> |
-| 0.8983 | <img src="images/faces/KLM0002/image_1.jpeg" width="80"/> | <img src="images/faces/KLM0032/image_1.jpeg" width="80"/> |
-| 0.8770 | <img src="images/faces/KLM0026/image_1.jpeg" width="80"/> | <img src="images/faces/KLM0032/image_1.jpeg" width="80"/> |
-| 0.8755 | <img src="images/faces/KLF0003/image_3.jpeg" width="80"/> | <img src="images/faces/KLM0032/image_1.jpeg" width="80"/> |
-| 0.8747 | <img src="images/faces/KLF0003/image_3.jpeg" width="80"/> | <img src="images/faces/KLM0026/image_1.jpeg" width="80"/> |
-| 0.8743 | <img src="images/faces/KLF0002/image_3.jpeg" width="80"/> | <img src="images/faces/KLM0005/image_1.jpeg" width="80"/> |
-| 0.8742 | <img src="images/faces/KLF0037/image_1.jpeg" width="80"/> | <img src="images/faces/KLF0042/image_1.jpeg" width="80"/> |
-| 0.8737 | <img src="images/faces/KLF0032/image_1.jpeg" width="80"/> | <img src="images/faces/KLM0032/image_1.jpeg" width="80"/> |
-| 0.8702 | <img src="images/faces/KLF0003/image_3.jpeg" width="80"/> | <img src="images/faces/KLM0005/image_1.jpeg" width="80"/> |
-| 0.8693 | <img src="images/faces/KLF0036/image_1.jpeg" width="80"/> | <img src="images/faces/KLF0042/image_1.jpeg" width="80"/> |
+| 0.9056 | <img src="images/faces/KLF0037/image_1.jpeg" width="80"/><br/>**KLF0037** Maala<br/>F · Zone A | <img src="images/faces/KLF0040/image_1.jpeg" width="80"/><br/>**KLF0040** Seetha<br/>F · Zone A |
+| 0.8983 | <img src="images/faces/KLM0002/image_1.jpeg" width="80"/><br/>**KLM0002** Baagu<br/>M · Zone A, C | <img src="images/faces/KLM0032/image_1.jpeg" width="80"/><br/>**KLM0032** Naga<br/>M · Zone A |
+| 0.8770 | <img src="images/faces/KLM0026/image_1.jpeg" width="80"/><br/>**KLM0026** Bucket<br/>M · Zone A | <img src="images/faces/KLM0032/image_1.jpeg" width="80"/><br/>**KLM0032** Naga<br/>M · Zone A |
+| 0.8755 | <img src="images/faces/KLF0003/image_3.jpeg" width="80"/><br/>**KLF0003** Devi<br/>F · Zone B | <img src="images/faces/KLM0032/image_1.jpeg" width="80"/><br/>**KLM0032** Naga<br/>M · Zone A |
+| 0.8747 | <img src="images/faces/KLF0003/image_3.jpeg" width="80"/><br/>**KLF0003** Devi<br/>F · Zone B | <img src="images/faces/KLM0026/image_1.jpeg" width="80"/><br/>**KLM0026** Bucket<br/>M · Zone A |
+| 0.8743 | <img src="images/faces/KLF0002/image_3.jpeg" width="80"/><br/>**KLF0002** Villu<br/>F · Zone B | <img src="images/faces/KLM0005/image_1.jpeg" width="80"/><br/>**KLM0005** Pink Nose<br/>M · Zone A |
+| 0.8742 | <img src="images/faces/KLF0037/image_1.jpeg" width="80"/><br/>**KLF0037** Maala<br/>F · Zone A | <img src="images/faces/KLF0042/image_1.jpeg" width="80"/><br/>**KLF0042** Meenu<br/>F · Zone B |
+| 0.8737 | <img src="images/faces/KLF0032/image_1.jpeg" width="80"/><br/>**KLF0032** Nula<br/>F · Zone C | <img src="images/faces/KLM0032/image_1.jpeg" width="80"/><br/>**KLM0032** Naga<br/>M · Zone A |
+| 0.8702 | <img src="images/faces/KLF0003/image_3.jpeg" width="80"/><br/>**KLF0003** Devi<br/>F · Zone B | <img src="images/faces/KLM0005/image_1.jpeg" width="80"/><br/>**KLM0005** Pink Nose<br/>M · Zone A |
+| 0.8693 | <img src="images/faces/KLF0036/image_1.jpeg" width="80"/><br/>**KLF0036** Soba<br/>F · Zone A | <img src="images/faces/KLF0042/image_1.jpeg" width="80"/><br/>**KLF0042** Meenu<br/>F · Zone B |
 
 ## Leopards
 

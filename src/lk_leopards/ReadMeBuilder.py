@@ -74,21 +74,33 @@ class ReadMeBuilder:
         same_pairs.sort(key=lambda x: -x[0])
         diff_pairs.sort(key=lambda x: -x[0])
 
-        def _img_tag(key: str) -> str:
-            """Return an <img> tag for a similarity key like 'KLF0001/image_1'.
+        leopard_map = {l.id: l for l in self.leopards}
 
-            Prefers the face crop; falls back to the original image.
-            Returns the key as plain text if no file is found.
-            """
+        def _cell(key: str) -> str:
+            """Return an image + leopard info for a similarity key like 'KLF0001/image_1'."""
             leopard_id, stem = key.split("/", 1)
+            # Image tag — prefer face crop, fall back to original
+            img = key
             for base in ("images/faces", "images/original"):
                 matches = glob.glob(
                     os.path.join(base, leopard_id, stem + ".*")
                 )
                 if matches:
                     path = matches[0].replace("\\", "/")
-                    return f'<img src="{path}" width="80"/>'
-            return key
+                    img = f'<img src="{path}" width="80"/>'
+                    break
+            # Leopard metadata
+            leo = leopard_map.get(leopard_id)
+            if leo:
+                gender_label = "M" if leo.gender == "M" else "F"
+                zones = ", ".join(leo.zone_list)
+                info = (
+                    f"**{leopard_id}** {leo.name}"
+                    f"<br/>{gender_label} · Zone {zones}"
+                )
+            else:
+                info = leopard_id
+            return f"{img}<br/>{info}"
 
         def _table(
             pairs: list[tuple[float, str, str]], n: int = 10
@@ -100,9 +112,7 @@ class ReadMeBuilder:
                 "| --- | --- | --- |",
             ]
             for score, a, b in pairs[:n]:
-                img_a = _img_tag(a)
-                img_b = _img_tag(b)
-                lines.append(f"| {score:.4f} | {img_a} | {img_b} |")
+                lines.append(f"| {score:.4f} | {_cell(a)} | {_cell(b)} |")
             return lines
 
         lines = (
