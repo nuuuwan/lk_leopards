@@ -1,4 +1,9 @@
+import argparse
 import os
+
+from lk_leopards import LeopardAI  # noqa: E402
+from lk_leopards.ReadMeBuilder import ReadMeBuilder  # noqa: E402
+from lk_leopards.SimilarityBuilder import SimilarityBuilder  # noqa: E402
 
 # Suppress TensorFlow GPU/Metal init on macOS (prevents mutex lock stall)
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
@@ -14,14 +19,12 @@ _stderr_fd = os.dup(2)
 os.dup2(_devnull, 2)
 os.close(_devnull)
 
-from lk_leopards import LeopardAI  # noqa: E402
 
 # Restore stderr so Rich console output works normally
 os.dup2(_stderr_fd, 2)
 os.close(_stderr_fd)
 
 if __name__ == "__main__":
-    import argparse
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -36,4 +39,5 @@ if __name__ == "__main__":
     ai.build_face_detected(max_images=args.n)
     ai.build_faces_from_detected(max_images=args.n)
     ai.build_fingerprints()
-    ai.build_similarity()
+    SimilarityBuilder().write()
+    ReadMeBuilder().write()

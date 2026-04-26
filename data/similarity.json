@@ -1,0 +1,134 @@
+{
+  "KLF0001/image_2": [
+    {
+      "image": "KLF0003/image_1",
+      "score": 0.802771
+    },
+    {
+      "image": "KLF0002/image_3",
+      "score": 0.797538
+    },
+    {
+      "image": "KLF0003/image_3",
+      "score": 0.781569
+    },
+    {
+      "image": "KLF0002/image_1",
+      "score": 0.640956
+    },
+    {
+      "image": "KLF0004/image_2",
+      "score": 0.513273
+    }
+  ],
+  "KLF0002/image_1": [
+    {
+      "image": "KLF0002/image_3",
+      "score": 0.788332
+    },
+    {
+      "image": "KLF0003/image_3",
+      "score": 0.716693
+    },
+    {
+      "image": "KLF0003/image_1",
+      "score": 0.650448
+    },
+    {
+      "image": "KLF0001/image_2",
+      "score": 0.640956
+    },
+    {
+      "image": "KLF0004/image_2",
+      "score": 0.384356
+    }
+  ],
+  "KLF0002/image_3": [
+    {
+      "image": "KLF0003/image_3",
+      "score": 0.855279
+    },
+    {
+      "image": "KLF0001/image_2",
+      "score": 0.797538
+    },
+    {
+      "image": "KLF0003/image_1",
+      "score": 0.795883
+    },
+    {
+      "image": "KLF0002/image_1",
+      "score": 0.788332
+    },
+    {
+      "image": "KLF0004/image_2",
+      "score": 0.41732
+    }
+  ],
+  "KLF0003/image_1": [
+    {
+      "image": "KLF0001/image_2",
+      "score": 0.802771
+    },
+    {
+      "image": "KLF0002/image_3",
+      "score": 0.795883
+    },
+    {
+      "image": "KLF0003/image_3",
+      "score": 0.732827
+    },
+    {
+      "image": "KLF0002/image_1",
+      "score": 0.650448
+    },
+    {
+      "image": "KLF0004/image_2",
+      "score": 0.456487
+    }
+  ],
+  "KLF0003/image_3": [
+    {
+      "image": "KLF0002/image_3",
+      "score": 0.855279
+    },
+    {
+      "image": "KLF0001/image_2",
+      "score": 0.781569
+    },
+    {
+      "image": "KLF0003/image_1",
+      "score": 0.732827
+    },
+    {
+      "image": "KLF0002/image_1",
+      "score": 0.716693
+    },
+    {
+      "image": "KLF0004/image_2",
+      "score": 0.427171
+    }
+  ],
+  "KLF0004/image_2": [
+    {
+      "image": "KLF0001/image_2",
+      "score": 0.513273
+    },
+    {
+      "image": "KLF0003/image_1",
+      "score": 0.456487
+    },
+    {
+      "image": "KLF0003/image_3",
+      "score": 0.427171
+    },
+    {
+      "image": "KLF0002/image_3",
+      "score": 0.41732
+    },
+    {
+      "image": "KLF0002/image_1",
+      "score": 0.384356
+    }
+  ]
+}

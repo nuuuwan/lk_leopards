@@ -4,10 +4,16 @@ import os
 import numpy as np
 from rich.console import Console
 from rich.panel import Panel
-from rich.progress import (BarColumn, MofNCompleteColumn, Progress,
-                           SpinnerColumn, TextColumn, TimeElapsedColumn)
+from rich.progress import (
+    BarColumn,
+    MofNCompleteColumn,
+    Progress,
+    SpinnerColumn,
+    TextColumn,
+    TimeElapsedColumn,
+)
 
-FINGERPRINTS_DIR = os.path.join("data", "finger_prints")
+FINGERPRINTS_DIR = os.path.join("data", "fingerprints")
 SIMILARITY_PATH = os.path.join("data", "similarity.json")
 
 console = Console()

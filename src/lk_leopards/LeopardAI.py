@@ -737,11 +737,11 @@ class LeopardAI:
                 count = 0
                 for va in vecs_a:
                     for vb in vecs_b:
-                        total += sum(
-                            x * y for x, y in zip(va, vb)
-                        )
+                        total += sum(x * y for x, y in zip(va, vb))
                         count += 1
-                similarity[id_a][id_b] = round(total / count, 6) if count else 0.0
+                similarity[id_a][id_b] = (
+                    round(total / count, 6) if count else 0.0
+                )
 
         os.makedirs(os.path.dirname(SIMILARITY_PATH) or ".", exist_ok=True)
         with open(SIMILARITY_PATH, "w", encoding="utf-8") as f:

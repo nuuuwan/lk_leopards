@@ -44,44 +44,67 @@ class ReadMeBuilder:
         )
 
     def _similarity_section(self) -> str:
-        """Build a summary of the top cross-leopard similar image pairs."""
+        """Build top-10 same-leopard and top-10 different-leopard pairs."""
         if not os.path.exists(SIMILARITY_PATH):
             return ""
 
         with open(SIMILARITY_PATH, encoding="utf-8") as f:
             similarity: dict = json.load(f)
 
-        # Collect unique cross-leopard pairs (different leopard IDs) with
-        # highest scores
         seen: set[frozenset] = set()
-        pairs: list[tuple[float, str, str]] = []
+        same_pairs: list[tuple[float, str, str]] = []
+        diff_pairs: list[tuple[float, str, str]] = []
+
         for src_key, matches in similarity.items():
             src_leopard = src_key.split("/")[0]
             for match in matches:
                 tgt_key: str = match["image"]
                 tgt_leopard = tgt_key.split("/")[0]
-                if src_leopard == tgt_leopard:
-                    continue
                 pair = frozenset([src_key, tgt_key])
                 if pair in seen:
                     continue
                 seen.add(pair)
-                pairs.append((match["score"], src_key, tgt_key))
+                entry = (match["score"], src_key, tgt_key)
+                if src_leopard == tgt_leopard:
+                    same_pairs.append(entry)
+                else:
+                    diff_pairs.append(entry)
 
-        pairs.sort(key=lambda x: -x[0])
-        top_pairs = pairs[:10]
+        same_pairs.sort(key=lambda x: -x[0])
+        diff_pairs.sort(key=lambda x: -x[0])
 
-        lines = [
-            "## Top Similar Pairs (Cross-Leopard)",
-            "",
-            "The 10 image pairs with the highest cosine similarity score "
-            "that belong to *different* leopards.",
-            "",
-            "| Score | Image A | Image B |",
-            "| --- | --- | --- |",
-        ]
-        for score, a, b in top_pairs:
-            lines.append(f"| {score:.4f} | {a} | {b} |")
+        def _table(
+            pairs: list[tuple[float, str, str]], n: int = 10
+        ) -> list[str]:
+            if not pairs:
+                return ["*No pairs found.*"]
+            lines = [
+                "| Score | Image A | Image B |",
+                "| --- | --- | --- |",
+            ]
+            for score, a, b in pairs[:n]:
+                lines.append(f"| {score:.4f} | {a} | {b} |")
+            return lines
+
+        lines = (
+            [
+                "## Top Similar Pairs — Same Leopard",
+                "",
+                "The 10 image pairs with the highest cosine similarity score "
+                "that belong to the *same* leopard.",
+                "",
+            ]
+            + _table(same_pairs)
+            + [
+                "",
+                "## Top Similar Pairs — Different Leopard",
+                "",
+                "The 10 image pairs with the highest cosine similarity score "
+                "that belong to *different* leopards.",
+                "",
+            ]
+            + _table(diff_pairs)
+        )
 
         return "\n".join(lines)
 
