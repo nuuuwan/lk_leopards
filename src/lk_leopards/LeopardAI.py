@@ -455,7 +455,7 @@ class LeopardAI:
                     skipped += 1
                 progress.advance(task_id)
 
-        precision_path = os.path.join(FACE_DETECTED_DIR, "precision.json")
+        precision_path = os.path.join(FACE_DETECTED_DIR, "metadata.json")
         os.makedirs(FACE_DETECTED_DIR, exist_ok=True)
         with open(precision_path, "w", encoding="utf-8") as f:
             json.dump(precision_log, f, indent=4)
@@ -480,12 +480,12 @@ class LeopardAI:
     ):
         """Crop face regions from original images using saved bbox coordinates.
 
-        Reads bbox coordinates from images/face_detected/precision.json
+        Reads bbox coordinates from images/face_detected/metadata.json
         (written by build_face_detected()), crops that region from the
         original image, and saves to images/faces/<id>/<image>.
         Already-processed images are skipped unless ``force_rebuild=True``.
         """
-        precision_path = os.path.join(FACE_DETECTED_DIR, "precision.json")
+        precision_path = os.path.join(FACE_DETECTED_DIR, "metadata.json")
         if not os.path.exists(precision_path):
             console.print(
                 f"[red]✗[/red] {precision_path} not found — "
@@ -504,7 +504,7 @@ class LeopardAI:
             Panel.fit(
                 f"[bold cyan]LeopardAI — Extract Faces from Detections"
                 f"[/bold cyan]\n"
-                f"Source: [dim]{FACE_DETECTED_DIR}/precision.json[/dim]  |  "
+                f"Source: [dim]{FACE_DETECTED_DIR}/metadata.json[/dim]  |  "
                 f"Entries: [bold]{len(entries)}[/bold]\n"
                 f"Output: [dim]{FACES_DIR}/[/dim]",
                 title="[bold]Starting[/bold]",
@@ -524,18 +524,14 @@ class LeopardAI:
         saved = 0
         skipped = 0
         with progress:
-            task_id = progress.add_task(
-                "Cropping faces", total=len(entries)
-            )
+            task_id = progress.add_task("Cropping faces", total=len(entries))
             for key, entry in entries:
                 # key is "<leopard_id>/<image_name>"
                 leopard_id, image_name = key.split("/", 1)
                 original_path = os.path.join(
                     "images", "original", leopard_id, image_name
                 )
-                face_path = os.path.join(
-                    FACES_DIR, leopard_id, image_name
-                )
+                face_path = os.path.join(FACES_DIR, leopard_id, image_name)
                 progress.update(
                     task_id,
                     description=(
@@ -544,9 +540,7 @@ class LeopardAI:
                     ),
                 )
                 if not force_rebuild and os.path.exists(face_path):
-                    console.log(
-                        f"[dim]— {key}: cached[/dim]"
-                    )
+                    console.log(f"[dim]— {key}: cached[/dim]")
                     progress.advance(task_id)
                     continue
                 try:
@@ -561,9 +555,7 @@ class LeopardAI:
                     )
                     saved += 1
                 except Exception as e:
-                    console.log(
-                        f"[yellow]⚠[/yellow] Error on {key}: {e}"
-                    )
+                    console.log(f"[yellow]⚠[/yellow] Error on {key}: {e}")
                     skipped += 1
                 progress.advance(task_id)
 
