@@ -14,19 +14,11 @@ _stderr_fd = os.dup(2)
 os.dup2(_devnull, 2)
 os.close(_devnull)
 
-from lk_leopards import (
-    LeopardAI,  # noqa: E402 (imports TF/DeepFace)
-    ReadMeBuilder,
-    SimilarityBuilder,
-)
+from lk_leopards import LeopardAI  # noqa: E402
 
 # Restore stderr so Rich console output works normally
 os.dup2(_stderr_fd, 2)
 os.close(_stderr_fd)
 
 if __name__ == "__main__":
-    ai = LeopardAI()
-    ai.build_faces()
-    ai.build_fingerprints()
-    SimilarityBuilder().write()
-    ReadMeBuilder().write()
+    LeopardAI().build_face_detected()

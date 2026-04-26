@@ -24,6 +24,7 @@ from lk_leopards.Leopard import Leopard
 
 FINGERPRINTS_DIR = os.path.join("data", "finger_prints")
 FACES_DIR = os.path.join("images", "faces")
+FACE_DETECTED_DIR = os.path.join("images", "face_detected")
 
 # ── FasterRCNN body-detection parameters ─────────────────────────────────────
 # COCO animal category IDs 16–25 (cat, dog, horse, sheep, cow, elephant,
@@ -101,24 +102,10 @@ class LeopardAI:
 
     # ── Face detection ─────────────────────────────────────────────────────
 
-    def detect_frontal_face(self, img: Image.Image) -> Image.Image | None:
-        """Return a padded head crop when the leopard is facing the camera.
-
-        Pipeline (analogous to a two-stage human face detector):
-
-        1. Run FasterRCNN to localise the animal body in the image.
-        2. Gate 1 — portrait ratio: discard boxes where width/height > 1.3.
-           A wide box means the animal is walking sideways; a tall/square box
-           means it is upright and likely looking toward the camera.
-        3. Crop the estimated head region from the top of the portrait box.
-        4. Gate 2 — sharpness: compute Laplacian variance on the head crop.
-           Values below ``_MIN_LAPLACIAN_VAR`` indicate blur or heavy foliage
-           occlusion and are discarded.
-        5. Return the padded head crop.
-
-        Returns ``None`` when no qualifying frontal face is found so the
-        caller can skip the image entirely.
-        """
+    def _compute_frontal_head_bbox(
+        self, img: Image.Image
+    ) -> tuple[int, int, int, int] | None:
+        """Return (x1, y1, x2, y2) head bbox, or None if no frontal face."""
         iw, ih = img.size
         tensor = tv_functional.to_tensor(img).unsqueeze(0)
         with torch.no_grad():
@@ -163,21 +150,35 @@ class LeopardAI:
         if lap_var < _MIN_LAPLACIAN_VAR:
             return None
 
-        return head
+        return (int(hx1), int(hy1), int(hx2), int(hy2))
+
+    def detect_frontal_face(self, img: Image.Image) -> Image.Image | None:
+        """Return a padded head crop when the leopard is facing the camera.
+
+        Returns ``None`` when no qualifying frontal face is found.
+        """
+        bbox = self._compute_frontal_head_bbox(img)
+        if bbox is None:
+            return None
+        return img.crop(bbox)
 
     @staticmethod
     def _face_image_path(original_image_path: str) -> str:
-        """Derive the face image path for a given original image path.
-
-        images/original/KLF0001/image_1.jpeg -> images/faces/KLF0001/image_1.jpeg
-        """
+        """Map images/original/<id>/<f> -> images/faces/<id>/<f>."""
         parts = original_image_path.replace("\\", "/").split("/")
-        # parts: ['images', 'original', '<id>', '<filename>']
         if len(parts) >= 4 and parts[0] == "images" and parts[1] == "original":
             return os.path.join("images", "faces", *parts[2:])
-        # Fallback: put alongside the original with a _face suffix
         stem, ext = os.path.splitext(original_image_path)
         return f"{stem}_face{ext}"
+
+    @staticmethod
+    def _face_detected_image_path(original_image_path: str) -> str:
+        """Map images/original/<id>/<f> -> images/face_detected/<id>/<f>."""
+        parts = original_image_path.replace("\\", "/").split("/")
+        if len(parts) >= 4 and parts[0] == "images" and parts[1] == "original":
+            return os.path.join("images", "face_detected", *parts[2:])
+        stem, ext = os.path.splitext(original_image_path)
+        return f"{stem}_face_detected{ext}"
 
     def embed_image(self, image_path: str) -> list[float]:
         """Return a normalised 1280-dim embedding for the given image.
@@ -270,6 +271,103 @@ class LeopardAI:
             Panel.fit(
                 f"[bold green]✓ Done![/bold green] "
                 f"Saved [bold]{saved}[/bold] face images  |  "
+                f"{skipped} skipped (no frontal face detected)",
+                title="[bold]Complete[/bold]",
+            )
+        )
+
+    def build_face_detected(self):
+        """Save original images annotated with a bounding box around the face.
+
+        For every original image where a frontal leopard face is detected,
+        writes a copy of the full original image with a green rectangle drawn
+        around the detected head region to images/face_detected/<id>/<image>.
+        Images with no qualifying frontal face are skipped.
+        """
+        leopards = sorted(Leopard.list_all(), key=lambda lp: lp.id)
+        all_images = [
+            (leopard, ip)
+            for leopard in leopards
+            for ip in leopard.image_path_list
+        ]
+
+        console.print(
+            Panel.fit(
+                f"[bold cyan]LeopardAI — Face Detected Bounding Boxes"
+                f"[/bold cyan]\n"
+                f"Leopards: [bold]{len(leopards)}[/bold]  |  "
+                f"Images: [bold]{len(all_images)}[/bold]  |  "
+                f"Output: [dim]{FACE_DETECTED_DIR}/[/dim]",
+                title="[bold]Starting[/bold]",
+            )
+        )
+
+        progress = Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            MofNCompleteColumn(),
+            TimeElapsedColumn(),
+            TimeRemainingColumn(),
+            console=console,
+        )
+
+        saved = 0
+        skipped = 0
+        with progress:
+            task_id = progress.add_task(
+                "Drawing bounding boxes", total=len(all_images)
+            )
+            for leopard, image_path in all_images:
+                image_name = os.path.basename(image_path)
+                progress.update(
+                    task_id,
+                    description=(
+                        f"[cyan]{leopard.id}[/cyan] "
+                        f"[dim]{image_name}[/dim]"
+                    ),
+                )
+                try:
+                    img = Image.open(image_path).convert("RGB")
+                    bbox = self._compute_frontal_head_bbox(img)
+                    if bbox is None:
+                        console.log(
+                            f"[dim]— {leopard.id}/{image_name}: "
+                            f"no frontal face[/dim]"
+                        )
+                        skipped += 1
+                    else:
+                        x1, y1, x2, y2 = bbox
+                        img_cv = cv2.cvtColor(
+                            np.array(img), cv2.COLOR_RGB2BGR
+                        )
+                        cv2.rectangle(
+                            img_cv, (x1, y1), (x2, y2), (0, 255, 0), 3
+                        )
+                        out_path = self._face_detected_image_path(
+                            image_path
+                        )
+                        os.makedirs(
+                            os.path.dirname(out_path), exist_ok=True
+                        )
+                        cv2.imwrite(out_path, img_cv)
+                        console.log(
+                            f"[green]✓[/green] {leopard.id}/{image_name}"
+                            f" → bbox ({x1},{y1},{x2},{y2}) → {out_path}"
+                        )
+                        saved += 1
+                except Exception as e:
+                    console.log(
+                        f"[yellow]⚠[/yellow] Error on "
+                        f"{leopard.id}/{image_name}: {e}"
+                    )
+                    skipped += 1
+                progress.advance(task_id)
+
+        console.print(
+            Panel.fit(
+                f"[bold green]✓ Done![/bold green] "
+                f"Saved [bold]{saved}[/bold] annotated images  |  "
                 f"{skipped} skipped (no frontal face detected)",
                 title="[bold]Complete[/bold]",
             )
