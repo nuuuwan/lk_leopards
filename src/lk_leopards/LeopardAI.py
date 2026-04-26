@@ -82,9 +82,7 @@ class LeopardAI:
         self._device = torch.device(
             "cuda"
             if torch.cuda.is_available()
-            else "mps"
-            if torch.backends.mps.is_available()
-            else "cpu"
+            else "mps" if torch.backends.mps.is_available() else "cpu"
         )
         self._model = None
         self._body_detector = None
@@ -493,18 +491,16 @@ class LeopardAI:
         )
 
         with progress:
-            task_id = progress.add_task(
-                "Embedding images", total=len(work)
-            )
+            task_id = progress.add_task("Embedding images", total=len(work))
             for batch_start in range(0, len(work), _EMBED_BATCH_SIZE):
-                batch = work[batch_start:batch_start + _EMBED_BATCH_SIZE]
+                batch = work[batch_start : batch_start + _EMBED_BATCH_SIZE]
                 imgs = [
                     Image.open(face_path).convert("RGB")
                     for _, _, face_path, _ in batch
                 ]
-                tensors = torch.stack(
-                    [_TRANSFORM(i) for i in imgs]
-                ).to(self._device)
+                tensors = torch.stack([_TRANSFORM(i) for i in imgs]).to(
+                    self._device
+                )
                 with torch.no_grad():
                     feats = model(tensors)
                     feats = feats / feats.norm(dim=-1, keepdim=True)
