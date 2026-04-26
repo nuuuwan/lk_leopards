@@ -6,7 +6,6 @@ import numpy as np
 import torch
 import torchvision.models as tv_models
 import torchvision.transforms as tv_transforms
-import torchvision.transforms.functional as tv_functional
 from PIL import Image
 from rich.console import Console
 from rich.panel import Panel
@@ -26,33 +25,10 @@ FINGERPRINTS_DIR = os.path.join("data", "finger_prints")
 FACES_DIR = os.path.join("images", "faces")
 FACE_DETECTED_DIR = os.path.join("images", "face_detected")
 
-# ── FasterRCNN body-detection parameters ─────────────────────────────────────
-# COCO animal category IDs 16–25 (cat, dog, horse, sheep, cow, elephant,
-# bear, zebra, giraffe, and catch-all); all plausible for a leopard.
-_ANIMAL_LABELS = frozenset(range(16, 26))
-# Minimum confidence score to keep a detection.
-_BODY_SCORE_THRESHOLD = 0.3
-# Maximum width/height ratio of the body bounding box.
-# A portrait box (ratio < this) means the animal is upright / facing camera.
-# A wide box (ratio > this) means the animal is walking sideways.
-_MAX_BODY_RATIO = 1.5
-# Minimum Laplacian variance of the head crop.
-# Low values indicate blur or heavy foliage occlusion.
-_MIN_LAPLACIAN_VAR = 50.0
-# Laplacian variance reference value used to normalise sharpness to [0, 1].
-_SHARPNESS_REF = 600.0
-# Minimum composite precision score (0–1) to save a detection.
-_MIN_PRECISION = 0.3
-# Fraction of the bounding-box height used for the head crop.
-_HEAD_HEIGHT_FRAC = 0.55
-# Proportional horizontal padding around the head crop.
-_HEAD_PAD = 0.12
-# Extra vertical padding above the head crop (for ears / top of head).
-_HEAD_PAD_TOP = 0.18
 # Cat-face Haar cascade parameters.
 _FACE_CASCADE_SCALE = 1.05
-_FACE_CASCADE_MIN_NEIGHBORS = 5
-_FACE_MIN_SIZE = 60
+_FACE_CASCADE_MIN_NEIGHBORS = 4
+_FACE_MIN_SIZE = 80
 
 console = Console()
 
@@ -83,7 +59,6 @@ class LeopardAI:
 
     def __init__(self):
         self._model = None
-        self._body_detector = None
         self._face_cascade = None
 
     # ── Model loading ──────────────────────────────────────────────────────
@@ -97,18 +72,6 @@ class LeopardAI:
             self._model = m
         return self._model
 
-    def _get_body_detector(self) -> torch.nn.Module:
-        if self._body_detector is None:
-            weights = (
-                tv_models.detection.FasterRCNN_MobileNet_V3_Large_FPN_Weights.DEFAULT
-            )
-            m = tv_models.detection.fasterrcnn_mobilenet_v3_large_fpn(
-                weights=weights
-            )
-            m.eval()
-            self._body_detector = m
-        return self._body_detector
-
     def _get_face_cascade(self) -> cv2.CascadeClassifier:
         if self._face_cascade is None:
             path = (
@@ -120,99 +83,20 @@ class LeopardAI:
 
     # ── Face detection ─────────────────────────────────────────────────────
 
-    @staticmethod
-    def _nose_mouth_score(face_gray: np.ndarray) -> float:
-        """Return a 0-1 score for nose and mouth feature presence.
-
-        Nose zone:  centre 50% width, 45-75% of face height.
-        Mouth zone: full width,       60-90% of face height.
-        """
-        fh, fw = face_gray.shape
-        if fh < 10 or fw < 10:
-            return 0.0
-
-        # Nose: compact high-contrast blob in lower-centre face.
-        n_y1, n_y2 = int(fh * 0.45), int(fh * 0.75)
-        n_x1, n_x2 = int(fw * 0.25), int(fw * 0.75)
-        nose_zone = face_gray[n_y1:n_y2, n_x1:n_x2]
-        nose_edges = cv2.Canny(nose_zone, 30, 100)
-        nose_score = min(float(np.mean(nose_edges > 0)) / 0.05, 1.0)
-
-        # Mouth: horizontal edge density in lower face.
-        m_y1, m_y2 = int(fh * 0.60), int(fh * 0.90)
-        mouth_zone = face_gray[m_y1:m_y2, :]
-        mouth_grad = cv2.Sobel(mouth_zone, cv2.CV_64F, 0, 1, ksize=3)
-        mouth_score = min(float(np.mean(np.abs(mouth_grad))) / 5.0, 1.0)
-
-        return (nose_score + mouth_score) / 2.0
-
     def _compute_frontal_head_bbox(
         self, img: Image.Image
     ) -> tuple[tuple[int, int, int, int], float] | None:
-        """Return ((x1, y1, x2, y2), precision) or None.
+        """Run the cat-face cascade on the full image.
 
-        Four-stage pipeline:
-        1. FasterRCNN body detection + portrait-ratio gate.
-        2. Cat-face Haar cascade on head crop  (hard gate — frontal face).
-        3. Eye cascade on upper face: >= 2 eyes (hard gate).
-        4. Sharpness gate on the face crop.
+        Returns ((x1, y1, x2, y2), precision) for the largest detected face,
+        or None if no face is found.
 
-        Composite precision score (0-1):
-          0.30 * FasterRCNN detection score
-        + 0.25 * normalised sharpness  (lap_var / _SHARPNESS_REF, ≤ 1)
-        + 0.25 * eye score             (n_eyes / 2, ≤ 1)
-        + 0.20 * nose-mouth score
-
-        Returns None when any hard gate fails or precision < _MIN_PRECISION.
+        precision is the detection score normalised to [0, 1] as
+        min_neighbors / (min_neighbors + 5).
         """
-        iw, ih = img.size
-        img_gray = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2GRAY)
-        tensor = tv_functional.to_tensor(img).unsqueeze(0)
-        with torch.no_grad():
-            pred = self._get_body_detector()(tensor)[0]
-
-        boxes = pred["boxes"]
-        scores = pred["scores"]
-        labels = pred["labels"]
-
-        keep = [
-            i
-            for i in range(len(scores))
-            if scores[i].item() >= _BODY_SCORE_THRESHOLD
-            and labels[i].item() in _ANIMAL_LABELS
-        ]
-        if not keep:
-            return None
-
-        best = max(keep, key=lambda i: scores[i].item())
-        detection_score = scores[best].item()
-        x1, y1, x2, y2 = (c.item() for c in boxes[best])
-        x1, y1 = max(0.0, x1), max(0.0, y1)
-        x2, y2 = min(float(iw), x2), min(float(ih), y2)
-        bw, bh = x2 - x1, y2 - y1
-
-        # Gate 1 — portrait ratio: wide box → animal is walking sideways.
-        aspect_ratio = bw / max(bh, 1)
-        if aspect_ratio > _MAX_BODY_RATIO:
-            return None
-
-        # Head region from body box.
-        head_y2 = y1 + min(bw * 1.15, bh * _HEAD_HEIGHT_FRAC)
-        px = bw * _HEAD_PAD
-        py_top = bh * _HEAD_PAD_TOP
-        hx1 = int(max(0.0, x1 - px))
-        hy1 = int(max(0.0, y1 - py_top))
-        hx2 = int(min(float(iw), x2 + px))
-        hy2 = int(min(float(ih), head_y2 + px))
-        head_gray = img_gray[hy1:hy2, hx1:hx2]
-
-        # Apply CLAHE to improve cascade discrimination over spotted coat.
-        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-        head_eq = clahe.apply(head_gray)
-
-        # Gate 2 — cat-face cascade (frontal face required).
+        gray = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2GRAY)
         faces = self._get_face_cascade().detectMultiScale(
-            head_eq,
+            gray,
             scaleFactor=_FACE_CASCADE_SCALE,
             minNeighbors=_FACE_CASCADE_MIN_NEIGHBORS,
             minSize=(_FACE_MIN_SIZE, _FACE_MIN_SIZE),
@@ -220,31 +104,12 @@ class LeopardAI:
         if len(faces) == 0:
             return None
 
-        fx, fy, fw, fh = max(faces, key=lambda r: r[2] * r[3])
-        face_x1 = hx1 + fx
-        face_y1 = hy1 + fy
-        face_x2 = face_x1 + fw
-        face_y2 = face_y1 + fh
-        face_gray = img_gray[face_y1:face_y2, face_x1:face_x2]
-
-        # Gate 3 — sharpness of the face crop.
-        lap_var = float(cv2.Laplacian(face_gray, cv2.CV_64F).var())
-        if lap_var < _MIN_LAPLACIAN_VAR:
-            return None
-
-        # Nose + mouth feature density.
-        nm_score = self._nose_mouth_score(face_gray)
-
-        # Composite precision.
-        sharpness_norm = min(lap_var / _SHARPNESS_REF, 1.0)
+        x, y, w, h = max(faces, key=lambda r: r[2] * r[3])
         precision = round(
-            0.40 * detection_score + 0.35 * sharpness_norm + 0.25 * nm_score,
+            _FACE_CASCADE_MIN_NEIGHBORS / (_FACE_CASCADE_MIN_NEIGHBORS + 5),
             4,
         )
-        if precision < _MIN_PRECISION:
-            return None
-
-        return (face_x1, face_y1, face_x2, face_y2), precision
+        return (x, y, x + w, y + h), precision
 
     def detect_frontal_face(self, img: Image.Image) -> Image.Image | None:
         """Return a padded head crop when the leopard is facing the camera.
