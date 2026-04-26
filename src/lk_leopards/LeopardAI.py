@@ -31,18 +31,18 @@ FACE_DETECTED_DIR = os.path.join("images", "face_detected")
 # bear, zebra, giraffe, and catch-all); all plausible for a leopard.
 _ANIMAL_LABELS = frozenset(range(16, 26))
 # Minimum confidence score to keep a detection.
-_BODY_SCORE_THRESHOLD = 0.6
+_BODY_SCORE_THRESHOLD = 0.3
 # Maximum width/height ratio of the body bounding box.
 # A portrait box (ratio < this) means the animal is upright / facing camera.
 # A wide box (ratio > this) means the animal is walking sideways.
-_MAX_BODY_RATIO = 1.1
+_MAX_BODY_RATIO = 1.5
 # Minimum Laplacian variance of the head crop.
 # Low values indicate blur or heavy foliage occlusion.
-_MIN_LAPLACIAN_VAR = 150.0
+_MIN_LAPLACIAN_VAR = 50.0
 # Laplacian variance reference value used to normalise sharpness to [0, 1].
 _SHARPNESS_REF = 600.0
 # Minimum composite precision score (0–1) to save a detection.
-_MIN_PRECISION = 0.5
+_MIN_PRECISION = 0.3
 # Fraction of the bounding-box height used for the head crop.
 _HEAD_HEIGHT_FRAC = 0.55
 # Proportional horizontal padding around the head crop.
@@ -51,13 +51,13 @@ _HEAD_PAD = 0.12
 _HEAD_PAD_TOP = 0.18
 # Cat-face Haar cascade parameters.
 _FACE_CASCADE_SCALE = 1.05
-_FACE_CASCADE_MIN_NEIGHBORS = 3
-_FACE_MIN_SIZE = 40
+_FACE_CASCADE_MIN_NEIGHBORS = 2
+_FACE_MIN_SIZE = 20
 # Eye Haar cascade parameters.
 _EYE_CASCADE_SCALE = 1.1
-_EYE_CASCADE_MIN_NEIGHBORS = 2
+_EYE_CASCADE_MIN_NEIGHBORS = 1
 # Fraction of face height used as the eye-detection zone (upper portion).
-_EYE_ZONE_HEIGHT_FRAC = 0.55
+_EYE_ZONE_HEIGHT_FRAC = 0.60
 
 console = Console()
 
@@ -248,7 +248,7 @@ class LeopardAI:
             scaleFactor=_EYE_CASCADE_SCALE,
             minNeighbors=_EYE_CASCADE_MIN_NEIGHBORS,
         )
-        if len(eyes) < 2:
+        if len(eyes) < 1:
             return None
 
         # Nose + mouth feature density.
