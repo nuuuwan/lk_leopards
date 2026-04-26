@@ -26,29 +26,61 @@ FINGERPRINTS_DIR = os.path.join("data", "finger_prints")
 FACES_DIR = os.path.join("images", "faces")
 FACE_DETECTED_DIR = os.path.join("images", "face_detected")
 
-# ── FasterRCNN body-detection parameters ─────────────────────────────────────
-# COCO animal category IDs 16–25 (cat, dog, horse, sheep, cow, elephant,
-# bear, zebra, giraffe, and catch-all); all plausible for a leopard.
-_ANIMAL_LABELS = frozenset(range(16, 26))
-# Minimum confidence score to keep a detection.
-_BODY_SCORE_THRESHOLD = 0.9
-# Maximum width/height ratio of the body bounding box.
-# A portrait box (ratio < this) means the animal is upright / facing camera.
-# A wide box (ratio > this) means the animal is walking sideways.
-_MAX_BODY_RATIO = 1.3
-# Minimum Laplacian variance of the head crop.
-# Low values indicate blur or heavy foliage occlusion.
+# ── Detection tuning parameters ───────────────────────────────────────────────
+# These control which images are accepted or rejected during face detection.
+# Adjust them if you're getting too many missed detections (raise thresholds)
+# or too many false positives (lower thresholds).
+
+# Which COCO animal categories the detector is allowed to match.
+# IDs 16–25 cover: cat, dog, horse, sheep, cow, elephant, bear, zebra,
+# giraffe, and a catch-all.  Leopards are not a named COCO class, so the
+# detector matches the nearest animal shape.  Leave this alone.
+_ANIMAL_LABELS = frozenset({17})  # 17 = cat
+
+# How confident the detector must be before we trust a body detection.
+# Range: 0.0 – 1.0.  Higher → fewer but more reliable detections.
+# Lower → more detections, but also more false positives.
+# Try 0.7 if too many images are being skipped; try 0.95 to reduce noise.
+_BODY_SCORE_THRESHOLD = 0.5
+
+# Maximum allowed width-to-height ratio of the body bounding box.
+# A value of 1 means only accept boxes that are taller than they are wide
+# (i.e. the leopard is upright / facing the camera).
+# Increase (e.g. 1.5) to also include animals photographed at an angle;
+# decrease (e.g. 0.8) to be stricter about frontal poses.
+_MAX_BODY_RATIO = 1
+
+# How sharp the head crop must be (measured by Laplacian variance).
+# Higher → only crisp, well-focused head regions are accepted.
+# Lower → blurrier images pass through (useful if your photos are soft).
+# Typical range to experiment with: 50–150.
 _MIN_LAPLACIAN_VAR = 80.0
-# Fraction of the bounding-box height used for the head crop.
-_HEAD_HEIGHT_FRAC = 0.55
-# Proportional horizontal padding around the head crop.
+
+# What fraction of the body box height becomes the head crop.
+# 0.55 means the top 55 % of the detected body box is treated as the head.
+# Increase slightly (e.g. 0.65) if the crop cuts off the chin;
+# decrease (e.g. 0.45) if it includes too much of the neck/chest.
+_HEAD_HEIGHT_FRAC = 0.6
+
+# Extra horizontal padding added on each side of the head crop, as a
+# fraction of the body-box width.  0.12 adds 12 % on each side.
+# Increase if ears are being clipped; decrease if background is distracting.
 _HEAD_PAD = 0.12
-# Extra vertical padding above the head crop (for ears / top of head).
+
+# Extra padding added above the head crop (for ears and the top of the head),
+# as a fraction of the body-box height.  0.18 adds 18 % above.
+# Increase if the top of the head is cut off in saved crops.
 _HEAD_PAD_TOP = 0.18
-# Laplacian variance on the full image below which the image is skipped
-# before running the (expensive) FasterRCNN detector.
+
+# Whole-image sharpness threshold checked before running the detector.
+# Images blurrier than this are skipped immediately (saves time).
+# Lower → fewer images skipped up front; higher → faster pipeline overall.
+# Set to 0 to disable this early exit entirely.
 _GLOBAL_BLUR_THRESHOLD = 40.0
-# Number of face images to embed in a single forward pass.
+
+# Number of face images processed together in one GPU/CPU forward pass
+# during the embedding step.  Larger batches are faster on GPU/MPS but
+# use more memory.  Reduce to 4 or 8 if you run out of memory.
 _EMBED_BATCH_SIZE = 16
 
 console = Console()
@@ -79,11 +111,12 @@ class LeopardAI:
     EMBEDDING_DIM = 1280
 
     def __init__(self):
-        self._device = torch.device(
-            "cuda"
-            if torch.cuda.is_available()
-            else "mps" if torch.backends.mps.is_available() else "cpu"
-        )
+        # self._device = torch.device(
+        #     "cuda"
+        #     if torch.cuda.is_available()
+        #     else "mps" if torch.backends.mps.is_available() else "cpu"
+        # )
+        self._device = torch.device("cpu")
         self._model = None
         self._body_detector = None
 
