@@ -17,8 +17,10 @@ The 10 image pairs with the highest cosine similarity score that belong to the *
 
 | Score | Image A | Image B |
 | --- | --- | --- |
+| 0.8585 | KLM0033/image_1 | KLM0033/image_4 |
+| 0.8058 | KLF0044/image_1 | KLF0044/image_4 |
 | 0.7883 | KLF0002/image_1 | KLF0002/image_3 |
-| 0.7328 | KLF0003/image_1 | KLF0003/image_3 |
+| 0.7386 | KLF0009/image_2 | KLF0009/image_1 |
 
 ## Top Similar Pairs — Different Leopard
 
@@ -26,16 +28,16 @@ The 10 image pairs with the highest cosine similarity score that belong to *diff
 
 | Score | Image A | Image B |
 | --- | --- | --- |
-| 0.8553 | KLF0002/image_3 | KLF0003/image_3 |
-| 0.8028 | KLF0001/image_2 | KLF0003/image_1 |
-| 0.7975 | KLF0001/image_2 | KLF0002/image_3 |
-| 0.7959 | KLF0002/image_3 | KLF0003/image_1 |
-| 0.7816 | KLF0001/image_2 | KLF0003/image_3 |
-| 0.7167 | KLF0002/image_1 | KLF0003/image_3 |
-| 0.6504 | KLF0002/image_1 | KLF0003/image_1 |
-| 0.6410 | KLF0001/image_2 | KLF0002/image_1 |
-| 0.5133 | KLF0001/image_2 | KLF0004/image_2 |
-| 0.4565 | KLF0003/image_1 | KLF0004/image_2 |
+| 0.9056 | KLF0037/image_1 | KLF0040/image_1 |
+| 0.8983 | KLM0002/image_1 | KLM0032/image_1 |
+| 0.8770 | KLM0026/image_1 | KLM0032/image_1 |
+| 0.8755 | KLF0003/image_3 | KLM0032/image_1 |
+| 0.8747 | KLF0003/image_3 | KLM0026/image_1 |
+| 0.8743 | KLF0002/image_3 | KLM0005/image_1 |
+| 0.8742 | KLF0037/image_1 | KLF0042/image_1 |
+| 0.8737 | KLF0032/image_1 | KLM0032/image_1 |
+| 0.8702 | KLF0003/image_3 | KLM0005/image_1 |
+| 0.8693 | KLF0036/image_1 | KLF0042/image_1 |
 
 ## Leopards
 
