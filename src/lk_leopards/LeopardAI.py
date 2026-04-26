@@ -31,14 +31,18 @@ FACE_DETECTED_DIR = os.path.join("images", "face_detected")
 # bear, zebra, giraffe, and catch-all); all plausible for a leopard.
 _ANIMAL_LABELS = frozenset(range(16, 26))
 # Minimum confidence score to keep a detection.
-_BODY_SCORE_THRESHOLD = 0.3
+_BODY_SCORE_THRESHOLD = 0.6
 # Maximum width/height ratio of the body bounding box.
 # A portrait box (ratio < this) means the animal is upright / facing camera.
 # A wide box (ratio > this) means the animal is walking sideways.
-_MAX_BODY_RATIO = 1.3
+_MAX_BODY_RATIO = 1.1
 # Minimum Laplacian variance of the head crop.
 # Low values indicate blur or heavy foliage occlusion.
-_MIN_LAPLACIAN_VAR = 80.0
+_MIN_LAPLACIAN_VAR = 150.0
+# Laplacian variance reference value used to normalise sharpness to [0, 1].
+_SHARPNESS_REF = 600.0
+# Minimum composite precision score (0–1) to save a detection.
+_MIN_PRECISION = 0.5
 # Fraction of the bounding-box height used for the head crop.
 _HEAD_HEIGHT_FRAC = 0.55
 # Proportional horizontal padding around the head crop.
@@ -104,8 +108,16 @@ class LeopardAI:
 
     def _compute_frontal_head_bbox(
         self, img: Image.Image
-    ) -> tuple[int, int, int, int] | None:
-        """Return (x1, y1, x2, y2) head bbox, or None if no frontal face."""
+    ) -> tuple[tuple[int, int, int, int], float] | None:
+        """Return ((x1, y1, x2, y2), precision) or None.
+
+        precision is a composite [0, 1] score:
+          0.4 * detection_confidence
+        + 0.4 * normalised_sharpness   (lap_var / _SHARPNESS_REF, capped at 1)
+        + 0.2 * portrait_score         (1 − aspect_ratio / _MAX_BODY_RATIO)
+
+        Returns None when any hard gate fails or precision < _MIN_PRECISION.
+        """
         iw, ih = img.size
         tensor = tv_functional.to_tensor(img).unsqueeze(0)
         with torch.no_grad():
@@ -125,13 +137,15 @@ class LeopardAI:
             return None
 
         best = max(keep, key=lambda i: scores[i].item())
+        detection_score = scores[best].item()
         x1, y1, x2, y2 = (c.item() for c in boxes[best])
         x1, y1 = max(0.0, x1), max(0.0, y1)
         x2, y2 = min(float(iw), x2), min(float(ih), y2)
         bw, bh = x2 - x1, y2 - y1
 
         # Gate 1 — portrait ratio: wide box → animal is walking sideways.
-        if bw / max(bh, 1) > _MAX_BODY_RATIO:
+        aspect_ratio = bw / max(bh, 1)
+        if aspect_ratio > _MAX_BODY_RATIO:
             return None
 
         # Head crop: upper portion of the portrait bounding box.
@@ -150,16 +164,29 @@ class LeopardAI:
         if lap_var < _MIN_LAPLACIAN_VAR:
             return None
 
-        return (int(hx1), int(hy1), int(hx2), int(hy2))
+        # Composite precision score.
+        sharpness_norm = min(lap_var / _SHARPNESS_REF, 1.0)
+        portrait_score = max(0.0, 1.0 - aspect_ratio / _MAX_BODY_RATIO)
+        precision = round(
+            0.4 * detection_score
+            + 0.4 * sharpness_norm
+            + 0.2 * portrait_score,
+            4,
+        )
+        if precision < _MIN_PRECISION:
+            return None
+
+        return (int(hx1), int(hy1), int(hx2), int(hy2)), precision
 
     def detect_frontal_face(self, img: Image.Image) -> Image.Image | None:
         """Return a padded head crop when the leopard is facing the camera.
 
         Returns ``None`` when no qualifying frontal face is found.
         """
-        bbox = self._compute_frontal_head_bbox(img)
-        if bbox is None:
+        result = self._compute_frontal_head_bbox(img)
+        if result is None:
             return None
+        bbox, _ = result
         return img.crop(bbox)
 
     @staticmethod
@@ -314,6 +341,7 @@ class LeopardAI:
 
         saved = 0
         skipped = 0
+        precision_log: dict[str, float] = {}
         with progress:
             task_id = progress.add_task(
                 "Drawing bounding boxes", total=len(all_images)
@@ -329,31 +357,28 @@ class LeopardAI:
                 )
                 try:
                     img = Image.open(image_path).convert("RGB")
-                    bbox = self._compute_frontal_head_bbox(img)
-                    if bbox is None:
+                    result = self._compute_frontal_head_bbox(img)
+                    if result is None:
                         console.log(
                             f"[dim]— {leopard.id}/{image_name}: "
-                            f"no frontal face[/dim]"
+                            f"no frontal face or precision too low[/dim]"
                         )
                         skipped += 1
                     else:
-                        x1, y1, x2, y2 = bbox
-                        img_cv = cv2.cvtColor(
-                            np.array(img), cv2.COLOR_RGB2BGR
-                        )
+                        (x1, y1, x2, y2), precision = result
+                        img_cv = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
                         cv2.rectangle(
                             img_cv, (x1, y1), (x2, y2), (0, 255, 0), 3
                         )
-                        out_path = self._face_detected_image_path(
-                            image_path
-                        )
-                        os.makedirs(
-                            os.path.dirname(out_path), exist_ok=True
-                        )
+                        out_path = self._face_detected_image_path(image_path)
+                        os.makedirs(os.path.dirname(out_path), exist_ok=True)
                         cv2.imwrite(out_path, img_cv)
+                        key = f"{leopard.id}/{image_name}"
+                        precision_log[key] = precision
                         console.log(
                             f"[green]✓[/green] {leopard.id}/{image_name}"
-                            f" → bbox ({x1},{y1},{x2},{y2}) → {out_path}"
+                            f" precision={precision:.4f}"
+                            f" → bbox ({x1},{y1},{x2},{y2})"
                         )
                         saved += 1
                 except Exception as e:
@@ -364,11 +389,20 @@ class LeopardAI:
                     skipped += 1
                 progress.advance(task_id)
 
+        precision_path = os.path.join(FACE_DETECTED_DIR, "precision.json")
+        os.makedirs(FACE_DETECTED_DIR, exist_ok=True)
+        with open(precision_path, "w", encoding="utf-8") as f:
+            json.dump(precision_log, f, indent=4)
+        console.log(
+            f"[green]✓[/green] Precision scores written → {precision_path}"
+        )
+
         console.print(
             Panel.fit(
                 f"[bold green]✓ Done![/bold green] "
                 f"Saved [bold]{saved}[/bold] annotated images  |  "
-                f"{skipped} skipped (no frontal face detected)",
+                f"{skipped} skipped (low precision or no face detected)  |  "
+                f"Min precision: [bold]{_MIN_PRECISION}[/bold]",
                 title="[bold]Complete[/bold]",
             )
         )
