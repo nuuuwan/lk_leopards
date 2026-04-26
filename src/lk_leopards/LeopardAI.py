@@ -437,7 +437,10 @@ class LeopardAI:
                         os.makedirs(os.path.dirname(out_path), exist_ok=True)
                         cv2.imwrite(out_path, img_cv)
                         key = f"{leopard.id}/{image_name}"
-                        precision_log[key] = precision
+                        precision_log[key] = {
+                            "score": precision,
+                            "bbox": [x1, y1, x2, y2],
+                        }
                         console.log(
                             f"[green]✓[/green] {leopard.id}/{image_name}"
                             f" score={precision:.4f}"
@@ -466,6 +469,109 @@ class LeopardAI:
                 f"Saved [bold]{saved}[/bold] annotated images  |  "
                 f"{skipped} skipped (low precision or no face detected)  |  "
                 f"Min precision: [bold]{_BODY_SCORE_THRESHOLD}[/bold]",
+                title="[bold]Complete[/bold]",
+            )
+        )
+
+    def build_faces_from_detected(
+        self,
+        force_rebuild: bool = False,
+        max_images: int | None = None,
+    ):
+        """Crop face regions from original images using saved bbox coordinates.
+
+        Reads bbox coordinates from images/face_detected/precision.json
+        (written by build_face_detected()), crops that region from the
+        original image, and saves to images/faces/<id>/<image>.
+        Already-processed images are skipped unless ``force_rebuild=True``.
+        """
+        precision_path = os.path.join(FACE_DETECTED_DIR, "precision.json")
+        if not os.path.exists(precision_path):
+            console.print(
+                f"[red]✗[/red] {precision_path} not found — "
+                "run build_face_detected() first."
+            )
+            return
+
+        with open(precision_path, encoding="utf-8") as f:
+            precision_log: dict = json.load(f)
+
+        entries = list(precision_log.items())
+        if max_images is not None:
+            entries = entries[:max_images]
+
+        console.print(
+            Panel.fit(
+                f"[bold cyan]LeopardAI — Extract Faces from Detections"
+                f"[/bold cyan]\n"
+                f"Source: [dim]{FACE_DETECTED_DIR}/precision.json[/dim]  |  "
+                f"Entries: [bold]{len(entries)}[/bold]\n"
+                f"Output: [dim]{FACES_DIR}/[/dim]",
+                title="[bold]Starting[/bold]",
+            )
+        )
+
+        progress = Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            MofNCompleteColumn(),
+            TimeElapsedColumn(),
+            TimeRemainingColumn(),
+            console=console,
+        )
+
+        saved = 0
+        skipped = 0
+        with progress:
+            task_id = progress.add_task(
+                "Cropping faces", total=len(entries)
+            )
+            for key, entry in entries:
+                # key is "<leopard_id>/<image_name>"
+                leopard_id, image_name = key.split("/", 1)
+                original_path = os.path.join(
+                    "images", "original", leopard_id, image_name
+                )
+                face_path = os.path.join(
+                    FACES_DIR, leopard_id, image_name
+                )
+                progress.update(
+                    task_id,
+                    description=(
+                        f"[cyan]{leopard_id}[/cyan] "
+                        f"[dim]{image_name}[/dim]"
+                    ),
+                )
+                if not force_rebuild and os.path.exists(face_path):
+                    console.log(
+                        f"[dim]— {key}: cached[/dim]"
+                    )
+                    progress.advance(task_id)
+                    continue
+                try:
+                    x1, y1, x2, y2 = entry["bbox"]
+                    img = Image.open(original_path).convert("RGB")
+                    face = img.crop((x1, y1, x2, y2))
+                    os.makedirs(os.path.dirname(face_path), exist_ok=True)
+                    face.save(face_path)
+                    console.log(
+                        f"[green]✓[/green] {key} "
+                        f"→ {face.size[0]}×{face.size[1]} → {face_path}"
+                    )
+                    saved += 1
+                except Exception as e:
+                    console.log(
+                        f"[yellow]⚠[/yellow] Error on {key}: {e}"
+                    )
+                    skipped += 1
+                progress.advance(task_id)
+
+        console.print(
+            Panel.fit(
+                f"[bold green]✓ Done![/bold green] "
+                f"Saved [bold]{saved}[/bold] face crops  |  "
+                f"{skipped} errors",
                 title="[bold]Complete[/bold]",
             )
         )
